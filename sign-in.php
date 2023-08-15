@@ -80,7 +80,7 @@
                                             />
                                         </div>
                                         <div class="mb-3">
-                                            <input type="text" class="form-control form-control-lg" placeholder="Password" aria-label="Password" name="password">
+                                            <input type="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" name="password">
                                         </div>
                                         <!-- <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="rememberMe">

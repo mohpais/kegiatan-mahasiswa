@@ -66,6 +66,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Tipe Pengajuan</th>
                                                 <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Judul</th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Kategori</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Diajukan pada</th>
@@ -83,6 +84,7 @@
                                                 $stmt = $conn->prepare("
                                                     SELECT 
                                                         ps.*, 
+                                                        lpj.id lpj_id ,
                                                         akun.nama user , 
                                                         kg.nama kategori , 
                                                         sp.nama status 
@@ -100,6 +102,10 @@
                                                             tbl_akun akun 
                                                             ON
                                                                 akun.kd_user = ps.created_by
+                                                        LEFT JOIN 
+                                                            tbl_lpj lpj 
+                                                            ON
+                                                                lpj.kd_proposal = ps.kd_proposal
                                                     WHERE
                                                         ps.status_id = 2
                                                 ");
@@ -111,6 +117,9 @@
                                             <?php foreach ($results as $row) { ?>
                                             <tr>
                                                 <td class="text-center text-xs"><?php echo $no; ?></td>
+                                                <td class="align-middle text-center text-xs">
+                                                    <span class="text-uppercase"><?php echo $row['lpj_id'] ? 'LPJ' : 'Proposal' ?></span>
+                                                </td>
                                                 <td class="">
                                                     <?php 
                                                         $originalString = $row['judul']; // Replace with your actual string

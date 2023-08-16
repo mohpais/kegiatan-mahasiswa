@@ -69,7 +69,10 @@
                                     <?php } ?>
                                     <form method="POST" action="services/register-service.php">
                                         <div class="mb-3">
-                                            <input type="text" class="form-control form-control-lg" placeholder="Kode Mahasiswa / Kode Dosen" aria-label="kd_user" name="kd_user">
+                                            <input type="text" class="form-control form-control-lg" placeholder="Kode Mahasiswa" aria-label="kd_user" name="kd_user">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control form-control-lg" placeholder="Masukkan nama" aria-label="nama" name="nama">
                                         </div>
                                         <div class="mb-3">
                                             <input type="text" class="form-control form-control-lg" placeholder="Kata sandi" aria-label="Password" name="password">

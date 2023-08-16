@@ -125,14 +125,14 @@
                                         </div>
                                     </div>
                                     <?php
-                                            // Perform database connection
-                                            $conn = connect_to_database();
-                                            // jalankan query
-                                            $stmt = $conn->prepare("
-                                                SELECT kd_kategori, nama FROM tbl_kategori WHERE is_active = 1");
-                                            $stmt->execute();
-                                            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                        ?>
+                                        // Perform database connection
+                                        $conn = connect_to_database();
+                                        // jalankan query
+                                        $stmt = $conn->prepare("
+                                            SELECT kd_kategori, nama FROM tbl_kategori WHERE is_active = 1");
+                                        $stmt->execute();
+                                        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    ?>
                                     <div class="form-group">
                                         <label for="kategori" class="form-control-label">Kategori</label>
                                         <select name="kategori" id="kategori" class="form-control" required>

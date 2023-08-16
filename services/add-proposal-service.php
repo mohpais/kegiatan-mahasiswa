@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_proposal LIKE '%" . $kd_kategori . "%'");
-    $insert = insertProposal($code, $judul, $semester, $tahun, $url, $user['kd_user']);
+    $insert = insertProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user']);
     if ($insert > 0) {
         $_SESSION['add_proposal_success'] = "Pengajuan proposal anda telah berhasil!";
         // Redirect back to the add proposal page
@@ -33,16 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-function insertProposal($kd_proposal, $judul, $semester, $tahun, $url, $kd_user) {
+function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url, $kd_user) {
     // Perform database connection
     $conn = connect_to_database();
 
     // Prepare and execute the query to insert data to tbl_proposal
-    $query = "INSERT INTO tbl_proposal (kd_proposal, status_id, judul, semester, tahun, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, 2, :judul, :semester, :tahun, :link_dokumen, :kd_user, :kd_user)";
+    $query = "INSERT INTO tbl_proposal (kd_proposal, kd_kategori, status_id, judul, semester, tahun, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, :kd_kategori, 2, :judul, :semester, :tahun, :link_dokumen, :kd_user, :kd_user)";
     $stmt = $conn->prepare($query);
     // bind parameter ke query
     $params = array(
         ":kd_proposal" => $kd_proposal,
+        ":kd_kategori" => $kd_kategori,
         ":judul" => $judul,
         ":semester" => $semester,
         ":tahun" => $tahun,

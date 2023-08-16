@@ -116,8 +116,8 @@
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kategori</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Link Proposal</th>
                                             <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-8">Link LPJ</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Proposal</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Proposal diajukan pada</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Pengajuan</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Pengajuan diajukan pada</th>
                                             <th class="text-secondary opacity-8"></th>
                                         </tr>
                                     </thead>
@@ -182,7 +182,7 @@
                                             </td>
                                             <td class="text-center text-xs">
                                                 <a href="<?php echo $row['link_dokumen'] ?>" target="_blank" class="text-xs text-primary mb-0">
-                                                    <u><i class="fa fa-file-pdf-o me-1"></i>Unduh Dokumen</u>
+                                                    <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
                                                 </a>
                                             </td>
                                             <td class="align-middle text-center text-xs">
@@ -225,7 +225,7 @@
                                                         <span class="btn-inner--text">Buat Laporan</span>
                                                     </a>
                                                 <?php } ?>
-                                                <?php if ($row['status_id'] != 3 || $row['lpj_id'] ) { ?>
+                                                <?php if (($row['lpj_id'] == null && $row['status_id'] != 3 && $row['status_id'] == 4) || $row['status_id'] == 2 || $row['status_id'] != 6 ) { ?>
                                                     <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
                                                         <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
                                                         <!-- <span class="btn-inner--text">Lihat <?php echo $row['lpj_id'] ? 'LPJ' : 'Proposal' ?></span> -->

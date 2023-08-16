@@ -85,7 +85,7 @@
             <div class="container-fluid py-4">
                 <div class="row">
                     <div class="col-md-7 col-sm-12">
-                        <form action="services/edit-proposal-service.php" method="POST">
+                        <form method="POST">
                             <div class="card mb-4">
                                 <div class="card-header border pb-3">
                                     <div class="row">
@@ -180,51 +180,59 @@
                                 <div class="card-footer border">
                                     <div class="row">
                                         <div class="col-auto mx-auto">
-                                            <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+                                            <button name="submit" class="btn btn-sm btn-primary">Edit</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <?php
+                                                if (isset($_POST['submit'])) {
+                                                    if (empty($_POST['link_foto'])) {
+                                                        echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                        exit;
+                                                    }
+                                                    // Prepare and execute the query to insert data to tbl_lpj
+                                                    $queryUpdateLPJ = "UPDATE tbl_lpj SET link_foto = :link_foto WHERE kd_proposal=:kd_proposal";
+                                                    $update = $conn->prepare($queryUpdateLPJ);
+                                                    // bind parameter ke query
+                                                    $params = array(
+                                                        ":link_foto" => $_POST['link_foto'],
+                                                        ":kd_proposal" => $_POST['kd_proposal']
+                                                    );
+                                                    $success = $update->execute($params);
+                                                    if ($success) {
+                                                        // Prepare and execute the query to insert data to tbl_proses
+                                                        $queryInsertProses = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :kd_user, 9), (:kd_proposal, :kd_user, 2)";
+                                                        $insert = $conn->prepare($queryInsertProses);
+                                                        // bind parameter ke query
+                                                        $params = array(
+                                                            ":kd_proposal" => $kd_proposal,
+                                                            ":kd_user" => $_SESSION['user']['id']
+                                                        );
+                                                        $insert->execute($params);
+                                                        if ($conn->lastInsertId() > 0) {
+                                                            $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE kd_proposal = :kd_proposal";
+                                                            $update = $conn->prepare($queryUpdate);
+                                                            $update->bindParam(':kd_proposal', $kd_proposal);
+
+                                                            $success = $update->execute();
+                                                            if ($success) {
+                                                                echo "<div class='alert alert-success'>Data LPJ berhasil terupdate</div>";
+                                                                echo "<meta http-equiv='refresh' content='1;url=dashboard.php'>";
+                                                            } else {
+                                                                echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                            }
+                                                        } else {
+                                                            echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                        }
+                                                    } else {
+                                                        echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                    }
+                                                }
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
-                                <?php
-                                    if (isset($_POST['submit'])) {
-                                        // Prepare and execute the query to insert data to tbl_lpj
-                                        $queryUpdateLPJ = "UPDATE tbl_lpj SET link_foto = :link_foto WHERE kd_proposal=::kd_proposal)";
-                                        $update = $conn->prepare($queryUpdateLPJ);
-                                        // bind parameter ke query
-                                        $params = array(
-                                            ":link_foto" => $_POST['link_foto'],
-                                            ":kd_proposal" => $kd_proposal
-                                        );
-                                        $success = $update->execute($params);
-                                        if ($success) {
-                                            // Prepare and execute the query to insert data to tbl_proses
-                                            $queryInsertProses = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :kd_user, 9), (:kd_proposal, :kd_user, 2)";
-                                            $insert = $conn->prepare($queryInsertProses);
-                                            // bind parameter ke query
-                                            $params = array(
-                                                ":kd_proposal" => $kd_proposal,
-                                                ":kd_user" => $_SESSION['user']['id']
-                                            );
-                                            $insert->execute($params);
-                                            if ($conn->lastInsertId() > 0) {
-                                                $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE kd_proposal = :kd_proposal";
-                                                $update = $conn->prepare($queryUpdate);
-                                                $update->bindParam(':kd_proposal', $kd_proposal);
-
-                                                $success = $update->execute();
-                                                if ($success) {
-                                                    echo "<div class='alert alert-success'>Data LPJ berhasil terupdate</div>";
-                                                    echo "<meta http-equiv='refresh' content='1;url=dashboard.php'>";
-                                                } else {
-                                                    echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
-                                                }
-                                            } else {
-                                                echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
-                                            }
-                                        } else {
-                                            echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
-                                        }
-                                    }
-                                ?>
                             </div>
                         </form>
                     </div>

@@ -59,7 +59,7 @@ function registerUser($kd_user, $nama, $password) {
         
         // jika query simpan berhasil, maka user sudah terdaftar
         // maka alihkan ke halaman login
-        if($saved) header("Location: sign-in.php");
+        if($saved) header("Location: ../sign-in.php");
     } else {
         $_SESSION['registration_error'] = "Role not found!";
         // Redirect back to the login page

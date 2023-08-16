@@ -17,11 +17,7 @@
     require_once 'helpers/authorize.php';
     require_once 'helpers/functions.php';
     require_once 'config/database.php';
-
-    // Perform database connection
-    $conn = connect_to_database();
-    // jalankan query
-    $stmt = $conn->prepare("
+    $query = "
         SELECT 
             ps.*, 
             lpj.id lpj_id ,
@@ -43,9 +39,40 @@
                 ON
                     lpj.kd_proposal = ps.kd_proposal
         WHERE
-            status_id IN (4, 7)
-        ORDER BY ps.created_at DESC 
-    ");
+            status_id IN (4, 7) 
+    ";
+
+    $dataFilters = [];
+    if (!empty($_GET['id'])) {
+        array_push($dataFilters, (object)['kd_proposal' => $_GET['id']]);
+    }
+    if (!empty($_GET['kategori'])) {
+        array_push($dataFilters, (object)['kategori_id' => $_GET['kategori']]);
+    }
+    if (!empty($_GET['tahun'])) {
+        array_push($dataFilters, (object)['tahun' => $_GET['tahun']]);
+    }
+
+    // if (count($dataFilters) > 0) {
+    //     $filter = " AND ";
+    //     foreach ($dataFilters as $index => $object) {
+    //         foreach($object as $keyOfObject=>$valueOfObject) {
+    //             if ($keyOfObject == "kd_proposal" || $keyOfObject == "tahun") {
+    //                 $filter = $filter . "ps." . $keyOfObject . "='" . $valueOfObject . "'";
+    //             }
+    //             if ($keyOfObject == "kd_proposal") {
+    //                 $filter = $filter . "ps." . $keyOfObject . "='" . $valueOfObject . "'";
+    //             }
+    //         }
+    //         if ($index < count($dataFilters) - 1) $filter = $filter . ' AND ';
+    //     }
+    //     $query = $query . $filter;
+    // }
+    $query = $query . " ORDER BY ps.created_at DESC";
+    // Perform database connection
+    $conn = connect_to_database();
+    // jalankan query
+    $stmt = $conn->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -133,13 +160,72 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="card mb-4">
-                            <div class="card-header border pb-3">
+                            <div class="card-header border pb-0">
                                 <div class="row">
                                     <div class="col-auto my-auto">
-                                        <h6 class="mb-0">Daftar Proposal</h6>
-                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Datfar proposal yang telah diajukan oleh Mahasiswa.</p>
+                                        <h6 class="mb-0">Daftar Pengajuan</h6>
+                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Pengajuan yang telah diajukan oleh Mahasiswa per tahun.</p>
                                     </div>
                                 </div>
+                                <form method="post">
+                                    <div class="row mt-2 border-top pt-3">
+                                        <div class="col">
+                                            <input id="kd_proposal" name="kd_proposal" type="text" class="form-control" placeholder="Masukkan kode" />
+                                        </div>
+                                        <div class="col">
+                                            <?php
+                                                // Perform database connection
+                                                $conn = connect_to_database();
+                                                // jalankan query
+                                                $stmt = $conn->prepare("
+                                                    SELECT kd_kategori, nama FROM tbl_kategori WHERE is_active = 1");
+                                                $stmt->execute();
+                                                $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
+                                            <select name="kd_kategori" id="kd_kategori" class="form-control">
+                                                <option value="" selected disabled>-- Pilih Kategori --</option>
+                                                <?php 
+                                                    foreach ($hasil as $item) {
+                                                ?>
+                                                    <option value="<?php echo $item['kd_kategori'] ?>"><?php echo $item['nama'] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <input name="tahun" type="text" class="form-control" placeholder="Masukkan tahun" 
+                                                        onkeypress="return onlyNumberKey(event)" />
+                                        </div>
+                                        <div class="col-auto">
+                                            <button name="search" class="btn btn-success">Cari data</button>
+                                        </div>
+                                    </div>
+                                    <?php 
+                                        if (isset($_POST['search'])) {
+                                            $dataFilters = [];
+                                            if (!empty($_POST['kd_proposal'])) {
+                                                array_push($dataFilters, (object)['id' => $_POST['kd_proposal']]);
+                                            }
+                                            if (!empty($_POST['kd_kategori'])) {
+                                                array_push($dataFilters, (object)['kategori' => $_POST['kd_kategori']]);
+                                            }
+                                            if (!empty($_POST['tahun'])) {
+                                                array_push($dataFilters, (object)['tahun' => $_POST['tahun']]);
+                                            }
+
+                                            if (count($dataFilters) > 0) {
+                                                $filter = "";
+                                                foreach ($dataFilters as $index => $object) {
+                                                    foreach($object as $keyOfObject=>$valueOfObject) {
+                                                        $filter = $filter . $keyOfObject . '=' . $valueOfObject;
+                                                    }
+                                                    if ($index < count($dataFilters) - 1) $filter = $filter . '&';
+                                                }
+                                                echo "<meta http-equiv='refresh' content='1;url=laporan.php?" . $filter . "'>";
+                                                // header('Location: edit-proposal.php?' . $filter);
+                                            }
+                                        }
+                                    ?>
+                                </form>
                             </div>
                             <div class="card-body px-0 pt-0 pb-2">
                                 <div class="table-responsive p-0">
@@ -273,6 +359,16 @@
         <script src="./assets/js/core/bootstrap.min.js"></script>
         <script src="./assets/js/plugins/perfect-scrollbar.min.js"></script>
         <script src="./assets/js/plugins/smooth-scrollbar.min.js"></script>
+        <script>
+            function onlyNumberKey(evt) {
+                
+                // Only ASCII character in that range allowed
+                var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+                if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                    return false;
+                return true;
+            }
+        </script>
         <script>
             var win = navigator.platform.indexOf('Win') > -1;
             if (win && document.querySelector('#sidenav-scrollbar')) {

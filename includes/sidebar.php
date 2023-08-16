@@ -130,6 +130,6 @@
                 </div>
             </div>
         </div>
-        <a href="" target="_blank" class="btn btn-ubk btn-sm w-100 mb-3">View Profile</a>
+        <!-- <a href="" target="_blank" class="btn btn-ubk btn-sm w-100 mb-3">View Profile</a> -->
     </div>
 </aside>

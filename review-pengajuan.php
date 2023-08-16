@@ -100,7 +100,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body pb-2">
+                                <div class="card-body pb-4">
                                     <div class="form-group">
                                         <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
                                         <input 
@@ -168,18 +168,41 @@
                                             <option value="<?php echo $item['kd_kategori'] ?>" selected><?php echo $item['nama'] ?></option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="w-100">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group mb-0">
+                                                    <label for="link_dokumen" class="form-control-label">Perlengkapan</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="<?php echo $result['link_dokumen'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
+                                                    <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
+                                                </a>
+                                            </div>
+                                            <?php if ($result['link_foto']) { ?>
+                                                <div class="col">
+                                                    <a href="<?php echo $result['link_foto'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
+                                                        <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
+                                                    </a>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="form-group">
                                         <label for="link_dokumen" class="form-control-label">Link Proposal</label>
                                         <input class="form-control" type="link_dokumen" id="link_dokumen" name="link_dokumen" value="<?php echo $result['link_dokumen'] ?>" disabled />
-                                    </div>
-                                    <?php if ($result['link_foto']) { ?>
-                                        <div class="form-group">
+                                    </div> -->
+                                    <!-- <?php if ($result['link_foto']) { ?> -->
+                                        <!-- <div class="form-group">
                                             <label for="link_foto" class="form-control-label">Link Foto</label>
                                             <input class="form-control" type="link_foto" id="link_foto" name="link_foto" value="<?php echo $result['link_foto'] ?>" disabled />
-                                        </div>
-                                    <?php } ?>
+                                        </div> -->
+                                    <!-- <?php } ?> -->
                                 </div>
-                                <div class="card-footer border">
+                                <div class="card-footer border pt-1">
                                     <?php if ($_SESSION['user']['role'] == "Kaprodi" && $result['status_id'] == 2) { ?>
                                     <div class="row">
                                         <div class="col-12 text-center">

@@ -113,7 +113,7 @@
                                             <!-- <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th> -->
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kode Proposal</th>
                                             <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Judul</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kategori</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Kategori</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Link Proposal</th>
                                             <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-8">Link LPJ</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Pengajuan</th>
@@ -177,7 +177,7 @@
                                                 ?>
                                                 <p class="text-xs font-weight-bold mb-0"><?php echo $shortenedString ?></p>
                                             </td>
-                                            <td class="text-center">
+                                            <td class="">
                                                 <p class="text-xs text-secondary mb-0"><?php echo $row['kategori'] ?></p>
                                             </td>
                                             <td class="text-center text-xs">

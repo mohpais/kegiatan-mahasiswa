@@ -162,7 +162,7 @@
                                             <?php } ?>
                                             <?php } else { ?>
                                             <tr>
-                                                <td class="text-center" colspan="6"><div class="h6">Tidak ada pengajuan baru</div></td>
+                                                <td class="text-center" colspan="7"><div class="h6">Tidak ada pengajuan baru</div></td>
                                             </tr>
                                             <?php } ?>
                                         </tbody>

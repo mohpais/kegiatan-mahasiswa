@@ -43,31 +43,32 @@
     ";
 
     $dataFilters = [];
+    $id = "";
+    $kategori = "";
+    $tahun = "";
     if (!empty($_GET['id'])) {
-        array_push($dataFilters, (object)['kd_proposal' => $_GET['id']]);
+        $id = $_GET['id'];
+        array_push($dataFilters, (object)['kd_proposal' => $id]);
     }
     if (!empty($_GET['kategori'])) {
-        array_push($dataFilters, (object)['kategori_id' => $_GET['kategori']]);
+        $kategori = $_GET['kategori'];
+        array_push($dataFilters, (object)['kd_kategori' => $kategori]);
     }
     if (!empty($_GET['tahun'])) {
-        array_push($dataFilters, (object)['tahun' => $_GET['tahun']]);
+        $tahun = $_GET['tahun'];
+        array_push($dataFilters, (object)['tahun' => $tahun]);
     }
 
-    // if (count($dataFilters) > 0) {
-    //     $filter = " AND ";
-    //     foreach ($dataFilters as $index => $object) {
-    //         foreach($object as $keyOfObject=>$valueOfObject) {
-    //             if ($keyOfObject == "kd_proposal" || $keyOfObject == "tahun") {
-    //                 $filter = $filter . "ps." . $keyOfObject . "='" . $valueOfObject . "'";
-    //             }
-    //             if ($keyOfObject == "kd_proposal") {
-    //                 $filter = $filter . "ps." . $keyOfObject . "='" . $valueOfObject . "'";
-    //             }
-    //         }
-    //         if ($index < count($dataFilters) - 1) $filter = $filter . ' AND ';
-    //     }
-    //     $query = $query . $filter;
-    // }
+    if (count($dataFilters) > 0) {
+        $filter = " AND ";
+        foreach ($dataFilters as $index => $object) {
+            foreach($object as $keyOfObject=>$valueOfObject) {
+                $filter = $filter . "ps." . $keyOfObject . "='" . $valueOfObject . "'";
+            }
+            if ($index < count($dataFilters) - 1) $filter = $filter . ' AND ';
+        }
+        $query = $query . $filter;
+    }
     $query = $query . " ORDER BY ps.created_at DESC";
     // Perform database connection
     $conn = connect_to_database();
@@ -170,7 +171,7 @@
                                 <form method="post">
                                     <div class="row mt-2 border-top pt-3">
                                         <div class="col">
-                                            <input id="kd_proposal" name="kd_proposal" type="text" class="form-control" placeholder="Masukkan kode" />
+                                            <input id="kd_proposal" name="kd_proposal" type="text" class="form-control" placeholder="Masukkan kode" value="<?php echo $id; ?>" />
                                         </div>
                                         <div class="col">
                                             <?php
@@ -187,16 +188,20 @@
                                                 <?php 
                                                     foreach ($hasil as $item) {
                                                 ?>
-                                                    <option value="<?php echo $item['kd_kategori'] ?>"><?php echo $item['nama'] ?></option>
+                                                    <option value="<?php echo $item['kd_kategori'] ?>" <?php echo $kategori == $item['kd_kategori'] ? 'selected' : '' ?>><?php echo $item['nama'] ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <input name="tahun" type="text" class="form-control" placeholder="Masukkan tahun" 
-                                                        onkeypress="return onlyNumberKey(event)" />
+                                            <input name="tahun" type="text" class="form-control" placeholder="Masukkan tahun" value="<?php echo $tahun; ?>"
+                                                        onkeypress="return onlyNumberKey(event)" maxlength="4" minlength="4"  />
                                         </div>
                                         <div class="col-auto">
-                                            <button name="search" class="btn btn-success">Cari data</button>
+                                            <?php if (!empty($id) ||!empty($kategori) || !empty($tahun)) { ?>
+                                                <a href="laporan.php" type="button" class="btn btn-success">Reset</a>
+                                            <?php } else { ?>
+                                                <button name="search" class="btn btn-success">Cari data</button>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                     <?php 
@@ -234,12 +239,12 @@
                                             <tr>
                                                 <!-- <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th> -->
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kode Proposal</th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Kategori</th>
                                                 <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Judul</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kategori</th>
-                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Link Proposal</th>
-                                                <th class="text-uppercase text-center text-secondary text-xxs font-weight-bolder opacity-8">Link LPJ</th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Link Proposal</th>
+                                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Link LPJ</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Proposal</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Proposal diajukan pada</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Proposal diajukan pada</th>
                                                 <th class="text-secondary opacity-8"></th>
                                             </tr>
                                         </thead>
@@ -265,15 +270,15 @@
                                                     ?>
                                                     <p class="text-xs font-weight-bold mb-0"><?php echo $shortenedString ?></p>
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="">
                                                     <p class="text-xs text-secondary mb-0"><?php echo $row['kategori'] ?></p>
                                                 </td>
                                                 <td class="text-center text-xs">
                                                     <a href="<?php echo $row['link_dokumen'] ?>" target="_blank" class="text-xs text-primary mb-0">
-                                                        <u><i class="fa fa-file-pdf-o me-1"></i>Unduh Dokumen</u>
+                                                        <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
                                                     </a>
                                                 </td>
-                                                <td class="align-middle text-center text-xs">
+                                                <td class="align-middle text-xs">
                                                     <?php if ($row['link_foto']) { ?>
                                                         <a href="<?php echo $row['link_foto'] ?>" target="_blank" class="text-xs text-primary mb-0">
                                                             <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
@@ -296,11 +301,11 @@
                                                     ?>
                                                     <span class="badge badge-sm bg-gradient-<?php echo $badgeColor; ?>"><?php echo $namaStatus ?></span>
                                                 </td>
-                                                <td class="align-middle text-center">
+                                                <td class="align-middle">
                                                     <span class="text-secondary text-xs font-weight-bold">
                                                         <?php
                                                             $timestamp = strtotime($row['created_at']);
-                                                            $formattedDate = date('d-M-Y', $timestamp);
+                                                            $formattedDate = date('d-M-Y H:m', $timestamp);
 
                                                             echo $formattedDate;
                                                         ?>
@@ -338,7 +343,7 @@
                                             <?php } ?>
                                             <?php } else { ?>
                                             <tr>
-                                                <td class="text-center" colspan="7"><div class="h6">Tidak ada pengajuan</div></td>
+                                                <td class="text-center" colspan="8"><div class="h6">Tidak ada pengajuan</div></td>
                                             </tr>
                                             <?php } ?>
                                         </tbody>

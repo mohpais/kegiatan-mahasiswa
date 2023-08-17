@@ -49,7 +49,7 @@ function updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tah
     $conn = connect_to_database();
 
     // Prepare and execute the query to insert data to tbl_proposal
-    $query = "UPDATE tbl_proposal SET kd_proposal = :kd_proposal, kd_kategori = :kd_kategori, status_id = 2, judul = :judul, semester = :semester, tahun = :tahun, link_dokumen = :link_dokumen WHERE id = :id";
+    $query = "UPDATE tbl_proposal SET kd_proposal = :kd_proposal, kd_kategori = :kd_kategori, status_id = 2, judul = :judul, semester = :semester, tahun_ajar_id = :tahun_ajar_id, link_dokumen = :link_dokumen WHERE id = :id";
     $stmt = $conn->prepare($query);
     // bind parameter ke query
     $params = array(
@@ -57,7 +57,7 @@ function updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tah
         ":kd_kategori" => $kd_kategori,
         ":judul" => $judul,
         ":semester" => $semester,
-        ":tahun" => $tahun,
+        ":tahun_ajar_id" => $tahun,
         ":link_dokumen" => $url,
         ":id" => $id,
     );

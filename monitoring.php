@@ -189,76 +189,14 @@
                                                             <span class="text-xs mb-0"><?php echo $row['rolename'] ?></span>
                                                         </div>
                                                     </td>
-                                                    <td class="align-middle text-sm">
+                                                    <!-- <td class="align-middle text-sm">
                                                         <div class="d-flex">
                                                             <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
                                                             <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
                                                         </div>
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             <?php } ?>
-                                            <!-- <tr>
-                                                <td class="w-20">
-                                                    <div class="d-flex px-2 py-1 align-items-center">
-                                                        <div>
-                                                            <img width="34" src="./assets/img/photo-profile-baru.png" alt="...">
-                                                        </div>
-                                                        <div class="ms-4">
-                                                            <p class="text-xs font-weight-bold mb-0">Nama:</p>
-                                                            <span class="text-xs mb-0">Mohamad Pais</span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="">
-                                                        <p class="text-xs font-weight-bold mb-0">Email:</p>
-                                                        <span class="text-xs mb-0">mohamad.pais30@gmail.com</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="">
-                                                        <p class="text-xs font-weight-bold mb-0">Role:</p>
-                                                        <span class="text-xs mb-0">Mahasiswa</span>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle text-sm">
-                                                    <div class="d-flex">
-                                                        <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
-                                                        <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="w-20">
-                                                    <div class="d-flex px-2 py-1 align-items-center">
-                                                        <div>
-                                                            <img width="34" src="./assets/img/photo-profile-baru.png" alt="...">
-                                                        </div>
-                                                        <div class="ms-4">
-                                                            <p class="text-xs font-weight-bold mb-0">Nama:</p>
-                                                            <span class="text-xs mb-0">Mohamad Pais</span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="">
-                                                        <p class="text-xs font-weight-bold mb-0">Email:</p>
-                                                        <span class="text-xs mb-0">mohamad.pais30@gmail.com</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="">
-                                                        <p class="text-xs font-weight-bold mb-0">Role:</p>
-                                                        <span class="text-xs mb-0">Mahasiswa</span>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle text-sm">
-                                                    <div class="d-flex">
-                                                        <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
-                                                        <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
-                                                    </div>
-                                                </td>
-                                            </tr> -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -270,32 +208,34 @@
                             <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
                                 <div class="carousel-inner border-radius-lg h-100">
                                     <div 
-                                        class="carousel-item h-100 active" 
-                                        style="background-image: url('./assets/img/carousel-1.jpg'); background-size: cover;">
-                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                        class="carousel-item h-100 active" style="background-image: url('./assets/img/galeri-bk.jpg'); background-size: cover;">
+                                        <div class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 10; background-color: #333; opacity: .5"></div>
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5" style="z-index: 11">
                                             <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                                 <i class="ni ni-camera-compact text-dark opacity-10"></i>
                                             </div>
-                                            <h5 class="text-white mb-1">Get started with Argon</h5>
-                                            <p>There’s nothing I really wanted to do in life that I wasn’t able to get good at.</p>
+                                            <h5 class="text-white mb-1">Bergabung bersama kami</h5>
+                                            <p>Menerapkan tata kelola universitas dengan standar mutu guna peningkatan adaptasi terhadap dinamika kemajuan iptek.</p>
                                         </div>
                                     </div>
-                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-2.jpg'); background-size: cover;">
-                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/galeri-bk2.jpg'); background-size: cover;">
+                                        <div class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 10; background-color: #333; opacity: .5"></div>
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5" style="z-index: 11">
                                             <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                                 <i class="ni ni-bulb-61 text-dark opacity-10"></i>
                                             </div>
-                                            <h5 class="text-white mb-1">Faster way to create web pages</h5>
-                                            <p>That’s my skill. I’m not really specifically talented at anything except for the ability to learn.</p>
+                                            <h5 class="text-white mb-1">Thinking </h5>
+                                            <p>Menyiapkan Universitas berbasis digital dalam menunjang atmosfir akademik dengan melalui pengabdian kepada masyarakat.</p>
                                         </div>
                                     </div>
-                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-3.jpg'); background-size: cover;">
-                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/galeri-bk3.jpg'); background-size: cover;">
+                                        <div class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 10; background-color: #333; opacity: .5"></div>
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5" style="z-index: 11">
                                             <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
                                                 <i class="ni ni-trophy text-dark opacity-10"></i>
                                             </div>
-                                            <h5 class="text-white mb-1">Share with us your design tips!</h5>
-                                            <p>Don’t be afraid to be wrong because you can’t learn anything from a compliment.</p>
+                                            <h5 class="text-white mb-1">Cita-cita!</h5>
+                                            <p>Menghasilkan lulusan yang berkualifikasi nasional / mandiri sesuai dengan kebutuhan masyarakat.</p>
                                         </div>
                                     </div>
                                 </div>

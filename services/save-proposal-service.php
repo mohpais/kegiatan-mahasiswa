@@ -72,7 +72,7 @@ function updateProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
     $find = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($find) {
         // Prepare and execute the query to insert data to tbl_proposal
-        $query = "UPDATE tbl_proposal SET kd_proposal = :kd_proposal, kd_kategori = :kd_kategori, status_id = :status_id, judul = :judul, semester = :semester, tahun = :tahun, link_dokumen = :link_dokumen WHERE id = :id";
+        $query = "UPDATE tbl_proposal SET kd_proposal = :kd_proposal, kd_kategori = :kd_kategori, status_id = :status_id, judul = :judul, semester = :semester, tahun_ajar_id = :tahun_ajar_id, link_dokumen = :link_dokumen WHERE id = :id";
         $stmt = $conn->prepare($query);
         // bind parameter ke query
         $params = array(
@@ -81,7 +81,7 @@ function updateProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
             ":status_id" => $method == 'submit' ? 2 : 11,
             ":judul" => $judul,
             ":semester" => $semester,
-            ":tahun" => $tahun,
+            ":tahun_ajar_id" => $tahun,
             ":link_dokumen" => $url,
             ":id" => $find['id']
         );

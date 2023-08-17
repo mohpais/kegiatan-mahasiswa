@@ -117,7 +117,7 @@
                                                 <select name="tahun" id="tahun" class="form-select">
                                                     <option value="" disabled selected>-- Pilih tahun ajaran --</option>
                                                     <?php foreach ($tahunAjaran as $row) { ?>
-                                                        <option value="<?php echo $row['tahun'] ?>"><?php echo $row['tahun'] ?></option>
+                                                        <option value="<?php echo $row['id'] ?>"><?php echo $row['tahun'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>

@@ -54,11 +54,11 @@
                         <div class="card mb-4">
                             <div class="card-header border pb-3">
                                 <div class="row">
-                                    <div class="col-xl-10 col-12 my-auto">
+                                    <div class="col-auto my-auto">
                                         <h6 class="mb-1">Master Kategori</h6>
                                         <p class="text-xs mb-0 text-secondary font-weight-bold">Datfar kategori untuk pengajuan.</p>
                                     </div>
-                                    <div class="col-xl-auto my-auto ms-auto">
+                                    <div class="col-auto my-auto ms-auto">
                                         <a class="btn btn-icon px-3 btn-sm btn-success my-auto" href="tambah-kategori.php">
                                             <span class="btn-inner--icon"><i class="fa fa-plus me-1"></i>Buat Kategori Baru</span>
                                         </a>

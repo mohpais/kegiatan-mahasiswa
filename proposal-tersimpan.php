@@ -135,7 +135,7 @@
                                                 <select name="tahun" id="tahun" class="form-select">
                                                     <option value="" disabled selected>-- Pilih tahun ajaran --</option>
                                                     <?php foreach ($tahunAjaran as $row) { ?>
-                                                        <option value="<?php echo $row['tahun'] ?>" <?php echo $result['tahun'] == $row['tahun'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
+                                                        <option value="<?php echo $row['id'] ?>" <?php echo $result['tahun_ajar_id'] == $row['id'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>

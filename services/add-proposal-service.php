@@ -61,7 +61,7 @@ function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
     // Perform database connection
     $conn = connect_to_database();
     // Prepare and execute the query to insert data to tbl_proposal
-    $query = "INSERT INTO tbl_proposal (kd_proposal, kd_kategori, status_id, judul, semester, tahun, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, :kd_kategori, :status_id, :judul, :semester, :tahun, :link_dokumen, :kd_user, :kd_user)";
+    $query = "INSERT INTO tbl_proposal (kd_proposal, kd_kategori, status_id, judul, semester, tahun_ajar_id, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, :kd_kategori, :status_id, :judul, :semester, :tahun_ajar_id, :link_dokumen, :kd_user, :kd_user)";
     $stmt = $conn->prepare($query);
     // bind parameter ke query
     $params = array(
@@ -70,7 +70,7 @@ function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
         ":status_id" => $method == 'submit' ? 2 : 11,
         ":judul" => $judul,
         ":semester" => $semester,
-        ":tahun" => $tahun,
+        ":tahun_ajar_id" => $tahun,
         ":link_dokumen" => $url,
         ":kd_user" => $kd_user
     );

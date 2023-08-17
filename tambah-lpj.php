@@ -92,6 +92,17 @@
                                 <div class="card-body pb-2">
                                     <div class="row">
                                         <div class="col">
+                                            <?php 
+                                                if (isset($_SESSION['add_lpj_error'])) {
+                                                    $message = $_SESSION['add_lpj_error'];
+                                                    echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
+                                                    unset($_SESSION['add_lpj_error']);
+                                                } 
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
                                             <div class="form-group">
                                                 <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
                                                 <input 
@@ -186,9 +197,14 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label for="url" class="form-control-label">Link Foto</label>
+                                                <label for="url" class="form-control-label">Link Foto <span class="text-danger">*</span></label>
                                                 <input class="form-control" type="url" id="url" name="url" placeholder="Masukkan link foto ..." required />
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <p class="text-xxs text-muted">(<span class="text-danger"><b>*</b></span>) <b>Mandatori</b> wajib diisi.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -200,6 +216,11 @@
                                     </div>
                                     <?php
                                         if (isset($_POST['submit'])) {
+                                            if (empty($_POST['url'])) {
+                                                $_SESSION['add_lpj_error'] = "Mohon untuk lengkapi data!";
+                                                echo "<meta http-equiv='refresh' content='1;url=tambah-lpj.php?id=" . $kd_proposal . "'>";
+                                                exit;
+                                            }
                                             // Prepare and execute the query to insert data to tbl_lpj
                                             $queryInsertLPJ = "INSERT INTO tbl_lpj (proposal_id, link_foto, created_by) VALUES (:proposal_id, :link_foto, :kd_user)";
                                             $insert = $conn->prepare($queryInsertLPJ);
@@ -227,16 +248,19 @@
 
                                                     $success = $update->execute();
                                                     if ($success) {
-                                                        echo "<div class='alert alert-success'>Data LPJ berhasil tersimpan</div>";
+                                                        $_SESSION['add_lpj_success'] = "Data LPJ berhasil tersimpan!";
                                                         echo "<meta http-equiv='refresh' content='1;url=dashboard.php'>";
                                                     } else {
-                                                        echo "<div class='alert alert-danger'>Data LPJ gagal tersimpan</div>";
+                                                        $_SESSION['add_lpj_success'] = "Data LPJ gagal tersimpan!";
+                                                        echo "<meta http-equiv='refresh' content='1;url=tambah-lpj.php?id=" . $kd_proposal . "'>";
                                                     }
                                                 } else {
-                                                    echo "<div class='alert alert-danger'>Data LPJ gagal tersimpan</div>";
+                                                    $_SESSION['add_lpj_error'] = "Data LPJ gagal tersimpan!";
+                                                    echo "<meta http-equiv='refresh' content='1;url=tambah-lpj.php?id=" . $kd_proposal . "'>";
                                                 }
                                             } else {
-                                                echo "<div class='alert alert-danger'>Data LPJ gagal tersimpan</div>";
+                                                $_SESSION['add_lpj_error'] = "Data LPJ gagal tersimpan!";
+                                                echo "<meta http-equiv='refresh' content='1;url=tambah-lpj.php?id=" . $kd_proposal . "'>";
                                             }
                                         }
                                     ?>

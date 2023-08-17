@@ -98,6 +98,17 @@
                                     </div>
                                 </div>
                                 <div class="card-body pb-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <?php 
+                                                if (isset($_SESSION['edit_lpj_error'])) {
+                                                    $message = $_SESSION['edit_lpj_error'];
+                                                    echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
+                                                    unset($_SESSION['edit_lpj_error']);
+                                                } 
+                                            ?>
+                                        </div>
+                                    </div>
                                     <input type="hidden" name="kd_proposal" value="<?php echo $result['kd_proposal'] ?>" />
                                     <div class="row">
                                         <div class="col">
@@ -220,7 +231,8 @@
                                             <?php
                                                 if (isset($_POST['submit'])) {
                                                     if (empty($_POST['link_foto'])) {
-                                                        echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                        $_SESSION['edit_lpj_error'] = "Mohon untuk lengkapi data!";
+                                                        echo "<meta http-equiv='refresh' content='1;url=edit-lpj.php?id=" . $kd_proposal . "'>";
                                                         exit;
                                                     }
                                                     // Prepare and execute the query to insert data to tbl_lpj
@@ -249,16 +261,19 @@
 
                                                             $success = $update->execute();
                                                             if ($success) {
-                                                                echo "<div class='alert alert-success'>Data LPJ berhasil terupdate</div>";
+                                                                $_SESSION['edit_lpj_success'] = "Data LPJ berhasil tersimpan!";
                                                                 echo "<meta http-equiv='refresh' content='1;url=dashboard.php'>";
                                                             } else {
-                                                                echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                                $_SESSION['add_lpj_success'] = "Data LPJ gagal terupdate!";
+                                                                echo "<meta http-equiv='refresh' content='1;url=edit-lpj.php?id=" . $kd_proposal . "'>";
                                                             }
                                                         } else {
-                                                            echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                            $_SESSION['add_lpj_success'] = "Data LPJ gagal terupdate!";
+                                                            echo "<meta http-equiv='refresh' content='1;url=edit-lpj.php?id=" . $kd_proposal . "'>";
                                                         }
                                                     } else {
-                                                        echo "<div class='alert alert-danger'>Data LPJ gagal terupdate</div>";
+                                                        $_SESSION['add_lpj_success'] = "Data LPJ gagal terupdate!";
+                                                        echo "<meta http-equiv='refresh' content='1;url=edit-lpj.php?id=" . $kd_proposal . "'>";
                                                     }
                                                 }
                                             ?>

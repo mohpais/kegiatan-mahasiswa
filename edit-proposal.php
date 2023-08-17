@@ -25,7 +25,6 @@
         SELECT 
             ps.*, 
             lpj.link_foto ,
-            kg.nama kd_kategori , 
             kg.nama kategori , 
             sp.nama status 
         FROM 
@@ -98,22 +97,14 @@
                                 <div class="card-body pb-2">
                                     <?php 
                                         if (isset($_SESSION['edit_proposal_error'])) {
+                                            $message = $_SESSION['edit_proposal_error'];
+                                            echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
+                                            unset($_SESSION['edit_proposal_error']);
+                                        } 
                                     ?>
-                                        <div class="alert alert-danger" role="alert">
-                                            <strong>Pemberitahuan!</strong> <?php echo $_SESSION['edit_proposal_error'] ?>
-                                        </div>
-                                    <?php } ?>
-                                    <?php 
-                                        if (isset($_SESSION['edit_proposal_success'])) {
-                                    ?>
-                                        <div class="alert alert-success" role="alert">
-                                            <?php echo $_SESSION['edit_proposal_success'] ?>
-                                        </div>
-                                        <?php echo "<meta http-equiv='refresh' content='1;url=approval.php'>"; ?>
-                                    <?php } ?>
                                     <input type="hidden" name="id" value="<?php echo $result['id'] ?>" />
                                     <input type="hidden" name="kd_proposal" value="<?php echo $result['kd_proposal'] ?>" />
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col">
                                             <div class="form-group">
                                                 <label for="kode" class="form-control-label">Kode Proposal</label>
@@ -128,7 +119,7 @@
                                                 />
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
@@ -191,7 +182,7 @@
                                                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
                                                 <select name="kd_kategori" id="kd_kategori" class="form-control">
-                                                    <option value="" disabled>-- Pilih salah satu --</option>
+                                                    <option value="" disabled selected>-- Pilih salah satu --</option>
                                                     <?php 
                                                         foreach ($results as $item) {
                                                     ?>

@@ -100,12 +100,29 @@
                                 </div>
                                 <div class="col-md-auto my-auto ms-auto d-md-block d-none">
                                     <a class="btn btn-icon px-3 btn-sm btn-success my-auto" href="tambah-tahun-ajaran.php">
-                                        <span class="btn-inner--icon"><i class="fa fa-plus me-1"></i>Buat Tahun Ajaran</span>
+                                        <span class="btn-inner--icon"><i class="fa fa-plus me-1"></i>Buat Tahun Ajaran Baru</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body px-0 pt-0 pb-2">
+                            <?php 
+                                if (isset($_SESSION['add_tahun_success'])) {
+                                    $message = $_SESSION['add_tahun_success'];
+                                    echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                    unset($_SESSION['add_tahun_success']);
+                                }
+                                if (isset($_SESSION['edit_tahun_success'])) {
+                                    $message = $_SESSION['edit_tahun_success'];
+                                    echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                    unset($_SESSION['edit_tahun_success']);
+                                }
+                                if (isset($_SESSION['delete_tahun_success'])) {
+                                    $message = $_SESSION['delete_tahun_success'];
+                                    echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                    unset($_SESSION['delete_tahun_success']);
+                                }
+                            ?>
                             <div class="table-responsive p-0">
                                 <table class="table align-items-center mb-0">
                                     <thead>
@@ -132,11 +149,11 @@
                                                     <td class="text-center text-xs font-weight-bold"><?php echo $no; ?></td>
                                                     <td class="ps-4 text-xs font-weight-bold"><?php echo $row['tahun']; ?></td>
                                                     <td class="align-middle text-center">
-                                                        <a href="edit-status.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
+                                                        <a href="edit-tahun-ajaran.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
                                                             <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
                                                             <span class="btn-inner--text">Edit</span>
                                                         </a>
-                                                        <a href="tambah-lpj.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
+                                                        <a href="hapus-tahun-ajaran.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
                                                             <span class="btn-inner--icon me-1"><i class="fa fa-trash"></i></span>
                                                             <span class="btn-inner--text">Hapus</span>
                                                         </a>

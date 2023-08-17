@@ -55,89 +55,74 @@
                             <div class="card-header border pb-3">
                                 <div class="row">
                                     <div class="col-xl-10 col-12 my-auto">
-                                        <h6 class="mb-1">Master Status Pengajuan</h6>
-                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Datfar status untuk pengajuan.</p>
+                                        <h6 class="mb-1">Master Kategori</h6>
+                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Datfar kategori untuk pengajuan.</p>
                                     </div>
                                     <div class="col-xl-auto my-auto ms-auto">
-                                        <a class="btn btn-icon px-3 btn-sm btn-success my-auto" href="tambah-status.php">
-                                            <span class="btn-inner--icon"><i class="fa fa-plus me-1"></i>Buat Status Baru</span>
+                                        <a class="btn btn-icon px-3 btn-sm btn-success my-auto" href="tambah-kategori.php">
+                                            <span class="btn-inner--icon"><i class="fa fa-plus me-1"></i>Buat Kategori Baru</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body px-0 pt-0 pb-2">
                                 <?php 
-                                    if (isset($_SESSION['add_status_success'])) {
-                                        $message = $_SESSION['add_status_success'];
+                                    if (isset($_SESSION['add_kategori_success'])) {
+                                        $message = $_SESSION['add_kategori_success'];
                                         echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
-                                        unset($_SESSION['add_status_success']);
+                                        unset($_SESSION['add_kategori_success']);
                                     }
-                                    if (isset($_SESSION['edit_status_success'])) {
-                                        $message = $_SESSION['edit_status_success'];
+                                    if (isset($_SESSION['edit_kategori_success'])) {
+                                        $message = $_SESSION['edit_kategori_success'];
                                         echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
-                                        unset($_SESSION['edit_status_success']);
+                                        unset($_SESSION['edit_kategori_success']);
                                     }
-                                    if (isset($_SESSION['delete_status_success'])) {
-                                        $message = $_SESSION['delete_status_success'];
+                                    if (isset($_SESSION['delete_kategori_success'])) {
+                                        $message = $_SESSION['delete_kategori_success'];
                                         echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
-                                        unset($_SESSION['delete_status_success']);
+                                        unset($_SESSION['delete_kategori_success']);
                                     }
                                 ?>
                                 <div class="table-responsive p-0">
                                     <table class="table align-items-center mb-0">
                                         <thead>
                                             <tr>
-                                                <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th>
+                                                <th width="15" class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">Kode</th>
                                                 <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Nama</th>
-                                                <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Deskripsi</th>
-                                                <th class="text-secondary opacity-8"></th>
+                                                <th width="30" class="text-secondary opacity-8"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                                $no = 1;
                                                 // Perform database connection
                                                 $conn = connect_to_database();
                                                 // jalankan query
-                                                $stmt = $conn->prepare("SELECT * FROM tbl_status WHERE is_active = 1");
+                                                $stmt = $conn->prepare("SELECT * FROM tbl_kategori WHERE is_active = 1");
                                                 $stmt->execute();
                                                 $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 
                                             ?>
                                             <?php if (count($hasil) > 0) {?>
-                                            <?php foreach ($hasil as $row) { ?>
-                                            <tr>
-                                                <td class="text-center text-xs"><?php echo $no; ?></td>
-                                                <td class="text-xs font-weight-bold"><?php echo $row['nama']; ?></td>
-                                                <td class="">
-                                                    <?php 
-                                                        $originalString = $row['deskripsi']; // Replace with your actual string
-
-                                                        if (strlen($originalString) > 100) {
-                                                            $shortenedString = substr($originalString, 0, 100) . '...';
-                                                        } else {
-                                                            $shortenedString = $originalString;
-                                                        }
-                                                    ?>
-                                                    <p class="text-xs mb-0"><?php echo $shortenedString ?></p>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <a href="edit-status.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
-                                                        <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
-                                                        <span class="btn-inner--text">Edit</span>
-                                                    </a>
-                                                    <a href="hapus-status.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
-                                                        <span class="btn-inner--icon me-1"><i class="fa fa-trash"></i></span>
-                                                        <span class="btn-inner--text">Hapus</span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <?php $no++; ?>
-                                            <?php } ?>
+                                                <?php foreach ($hasil as $row) { ?>
+                                                    <tr>
+                                                        <td class="text-center text-xs"><?php echo $row['kd_kategori']; ?></td>
+                                                        <td class="text-xs font-weight-bold"><?php echo $row['nama']; ?></td>
+                                                        <td class="align-middle text-center">
+                                                            <a href="edit-kategori.php?id=<?php echo $row['kd_kategori'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
+                                                                <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
+                                                                <span class="btn-inner--text">Edit</span>
+                                                            </a>
+                                                            <a href="hapus-kategori.php?id=<?php echo $row['kd_kategori'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
+                                                                <span class="btn-inner--icon me-1"><i class="fa fa-trash"></i></span>
+                                                                <span class="btn-inner--text">Hapus</span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>
                                             <?php } else { ?>
-                                            <tr>
-                                                <td class="text-center" colspan="4"><div class="h6">Tidak ada status</div></td>
-                                            </tr>
+                                                <tr>
+                                                    <td class="text-center" colspan="3"><div class="h6">Tidak ada kategori</div></td>
+                                                </tr>
                                             <?php } ?>
                                         </tbody>
                                     </table>

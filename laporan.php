@@ -324,30 +324,9 @@
                                                             </span>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <?php if ($row['status_id'] == 3 && $row['lpj_id'] == null) { ?>
-                                                                <a href="tambah-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-plus"></i></span>
-                                                                    <span class="btn-inner--text">Buat Laporan</span>
-                                                                </a>
-                                                            <?php } ?>
-                                                            <?php if ($row['status_id'] != 3 || $row['lpj_id'] ) { ?>
-                                                                <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
-                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
-                                                                    <span class="btn-inner--text">Lihat Pengajuan</span>
-                                                                </a>
-                                                            <?php } ?>
-                                                            <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
-                                                                <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
-                                                                    <span class="btn-inner--text">Edit Proposal</span>
-                                                                </a>
-                                                            <?php } ?>
-                                                            <?php if ($row['status_id'] == 6 && $row['lpj_id']) { ?>
-                                                                <a href="edit-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
-                                                                    <span class="btn-inner--text">Edit LPJ</span>
-                                                                </a>
-                                                            <?php } ?>
+                                                            <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                                <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 <?php } ?>

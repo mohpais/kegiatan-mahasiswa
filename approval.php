@@ -61,6 +61,23 @@
                                 </div>
                             </div>
                             <div class="card-body px-0 pt-0 pb-2">
+                                <?php 
+                                    if (isset($_SESSION['acc_proposal_success'])) {
+                                        $message = $_SESSION['acc_proposal_success'];
+                                        echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                        unset($_SESSION['acc_proposal_success']);
+                                    }
+                                    if (isset($_SESSION['revisi_proposal_success'])) {
+                                        $message = $_SESSION['revisi_proposal_success'];
+                                        echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                        unset($_SESSION['revisi_proposal_success']);
+                                    }
+                                    if (isset($_SESSION['reject_proposal_success'])) {
+                                        $message = $_SESSION['reject_proposal_success'];
+                                        echo "<div class='alert alert-success mx-4 my-2' role='alert'>" . $message . "</div>";
+                                        unset($_SESSION['reject_proposal_success']);
+                                    }
+                                ?>
                                 <div class="table-responsive p-0">
                                     <table class="table align-items-center mb-0">
                                         <thead>

@@ -70,25 +70,49 @@
                                             <a href="master-status.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
                                         </div>
                                         <div class="col-10 ps-1 my-auto">
-                                            <h6 class="mb-0">Edit Status <?php echo $result['nama'] ?></h6>
+                                            <h6 class="mb-0">Edit Status</h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body pb-2">
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Nama Status</label>
-                                        <input 
-                                            id="nama"
-                                            name="nama"
-                                            class="form-control" 
-                                            type="text" 
-                                            value="<?php echo $result['nama'] ?>"
-                                            required
-                                        />
+                                    <div class="row">
+                                        <div class="col">
+                                            <?php 
+                                                if (isset($_SESSION['edit_status_error'])) {
+                                                    $message = $_SESSION['edit_status_error'];
+                                                    echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
+                                                    unset($_SESSION['edit_status_error']);
+                                                } 
+                                            ?>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Deskripsi</label>
-                                        <textarea name="deskripsi" id="deskripsi" cols="30" rows="5" class="form-control"><?php echo $result['deskripsi'] ?></textarea>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Nama Status <span class="text-danger">*</span></label>
+                                                <input 
+                                                    id="nama"
+                                                    name="nama"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    value="<?php echo $result['nama'] ?>"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Deskripsi</label>
+                                                <textarea name="deskripsi" id="deskripsi" cols="30" rows="5" class="form-control"><?php echo $result['deskripsi'] ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <p class="text-xxs text-muted">(<span class="text-danger"><b>*</b></span>) <b>Mandatori</b> wajib diisi.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer border">
@@ -99,6 +123,11 @@
                                     </div>
                                     <?php
                                         if (isset($_POST['edit'])) {
+                                            if (empty($_POST['nama'])) {
+                                                $_SESSION['edit_status_error'] = "Mohon untuk lengkapi data!";
+                                                echo "<meta http-equiv='refresh' content='1;url=edit-status.php?id=" . $id . "'>";
+                                                exit;
+                                            }
                                             // Prepare and execute the query to insert data to tbl_proses
                                             $query = "UPDATE tbl_status SET nama = :nama, deskripsi = :deskripsi WHERE id = :id";
                                             $stmt = $conn->prepare($query);
@@ -110,11 +139,11 @@
                                             );
                                             $success = $stmt->execute($params);
                                             if ($success) {
-
-                                                echo "<div class='alert alert-success text-white'>Master status berhasil tersimpan</div>";
+                                                $_SESSION['edit_status_success'] = "Data master status berhasil tersimpan!";
                                                 echo "<meta http-equiv='refresh' content='1;url=master-status.php'>";
                                             } else {
-                                                echo "<div class='alert alert-danger'>Master status gagal tersimpan</div>";
+                                                $_SESSION['edit_status_error'] = "Master status gagal tersimpan!";
+                                                echo "<meta http-equiv='refresh' content='1;url=edit-status.php?id=" . $id . "'>";
                                             }
                                         }
                                     ?>

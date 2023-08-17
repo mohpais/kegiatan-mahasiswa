@@ -6,44 +6,68 @@ require_once '../config/database.php';
 $user = $_SESSION['user'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $kd_kategori = $_POST['kategori'];
-    $judul = $_POST['judul'];
-    $semester = $_POST['semester'];
-    $tahun = $_POST['tahun'];
-    $url = $_POST['url'];
-    if (empty($judul) || empty($url)) {
-        $_SESSION['add_proposal_error'] = "Mohon untuk lengkapi data form!";
-        // Redirect back to the add proposal page
-        header('Location: ../add-proposal.php');
-        exit;
-    }
-
-    $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
-    $insert = insertProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user']);
-    if ($insert > 0) {
-        $_SESSION['add_proposal_success'] = "Pengajuan proposal anda telah berhasil!";
-        // Redirect back to the add proposal page
-        header('Location: ../tambah-proposal.php');
-        exit;
+    $kd_kategori = isset($_POST['kategori']) ? $_POST['kategori'] : "";
+    $judul = isset($_POST['judul']) ? $_POST['judul'] : "";
+    $semester = isset($_POST['semester']) ? $_POST['semester'] : "";
+    $tahun = isset($_POST['tahun']) ? $_POST['tahun'] : "";
+    $url = isset($_POST['url']) ? $_POST['url'] : "";
+    if (isset($_POST['submit'])) {
+        if (empty($kd_kategori) || empty($judul) || empty($semester) || empty($tahun) || empty($url)) {
+            $_SESSION['add_proposal_error'] = "Mohon untuk lengkapi data form sebelum melakukan submit!";
+            // Redirect back to the add proposal page
+            header('Location: ../tambah-proposal.php');
+            exit;
+        }
+        $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
+        $insert = insertProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user'], 'submit');
+        if ($insert > 0) {
+            $_SESSION['add_proposal_success'] = "Pengajuan proposal anda telah berhasil tersubmit!";
+            // Redirect back to the add proposal page
+            header('Location: ../dashboard.php');
+            exit;
+        } else {
+            $_SESSION['add_proposal_error'] = "Pengajuan anda gagal tersubmit!";
+            // Redirect back to the add proposal page
+            header('Location: ../tambah-proposal.php');
+            exit;
+        }
     } else {
-        $_SESSION['add_proposal_error'] = "Pengajuan anda gagal!";
-        // Redirect back to the add proposal page
-        header('Location: ../tambah-proposal.php');
-        exit;
+        if (empty($kd_kategori) && empty($judul) && empty($semester) && empty($tahun) && empty($url)) {
+            $_SESSION['add_proposal_error'] = "Mohon untuk lengkapi data form sebelum menyimpan data!";
+            // Redirect back to the add proposal page
+            header('Location: ../tambah-proposal.php');
+            exit;
+        }
+        $code = "";
+        if (!empty($kd_kategori)) {
+            $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $_POST['kategori'] . "'");
+        }
+        $save = insertProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user'], 'save');
+        if ($save > 0) {
+            $_SESSION['add_proposal_success'] = "Pengajuan proposal anda berhasil tersimpan!";
+            // Redirect back to the add proposal page
+            header('Location: ../dashboard.php');
+            exit;
+        } else {
+            $_SESSION['add_proposal_error'] = "Pengajuan anda gagal tersimpan!";
+            // Redirect back to the add proposal page
+            header('Location: ../tambah-proposal.php');
+            exit;
+        }
     }
 }
 
-function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url, $kd_user) {
+function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url, $kd_user, $method) {
     // Perform database connection
     $conn = connect_to_database();
-
     // Prepare and execute the query to insert data to tbl_proposal
-    $query = "INSERT INTO tbl_proposal (kd_proposal, kd_kategori, status_id, judul, semester, tahun, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, :kd_kategori, 2, :judul, :semester, :tahun, :link_dokumen, :kd_user, :kd_user)";
+    $query = "INSERT INTO tbl_proposal (kd_proposal, kd_kategori, status_id, judul, semester, tahun, link_dokumen, created_by, updated_by) VALUES (:kd_proposal, :kd_kategori, :status_id, :judul, :semester, :tahun, :link_dokumen, :kd_user, :kd_user)";
     $stmt = $conn->prepare($query);
     // bind parameter ke query
     $params = array(
         ":kd_proposal" => $kd_proposal,
         ":kd_kategori" => $kd_kategori,
+        ":status_id" => $method == 'submit' ? 2 : 11,
         ":judul" => $judul,
         ":semester" => $semester,
         ":tahun" => $tahun,
@@ -52,19 +76,25 @@ function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
     );
     $stmt->execute($params);
     $last_proposal_id = $conn->lastInsertId();
-    if ($last_proposal_id > 0) {
-        // Prepare and execute the query to insert data to tbl_proses
-        $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 1), (:proposal_id, :akun_id, 2)";
-        $stmt = $conn->prepare($query);
-        // bind parameter ke query
-        $params = array(
-            ":proposal_id" => $last_proposal_id,
-            ":akun_id" => $_SESSION['user']['id']
-        );
-        $stmt->execute($params);
-        $last_flow_id = $conn->lastInsertId();
-        if ($last_flow_id > 0) return $conn->lastInsertId();
+    if ($method == 'submit') {
+        if ($last_proposal_id > 0) {
+            // Prepare and execute the query to insert data to tbl_proses
+            $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 1), (:proposal_id, :akun_id, 2)";
+            $stmt = $conn->prepare($query);
+            // bind parameter ke query
+            $params = array(
+                ":proposal_id" => $last_proposal_id,
+                ":akun_id" => $_SESSION['user']['id']
+            );
+            $stmt->execute($params);
+            $last_flow_id = $conn->lastInsertId();
+            if ($last_flow_id > 0) return $conn->lastInsertId();
+        }
+
+        return 0;
     }
+
+    if ($last_proposal_id > 0) return $conn->lastInsertId();
 
     return 0;
 }

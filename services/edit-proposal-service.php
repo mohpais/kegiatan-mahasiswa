@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tahun = $_POST['tahun'];
     $url = $_POST['url'];
     if (empty($kd_proposal) || empty($judul) || empty($semester) || empty($tahun) || empty($url)) {
-        $_SESSION['edit_proposal_error'] = "Mohon untuk lengkapi data form!";
+        $_SESSION['edit_proposal_error'] = "Mohon untuk lengkapi data form sebelum melakukan submit!";
         // Redirect back to the add proposal page
         header('Location: ../edit-proposal.php?id=' . $kd_proposal);
         exit;
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($update > 0) {
         $_SESSION['edit_proposal_success'] = "Revisi proposal telah berhasil!";
         // Redirect back to the add proposal page
-        header('Location: ../edit-proposal.php?id=' . $kd_proposal);
+        header('Location: ../dashboard.php');
         exit;
     } else {
         $_SESSION['edit_proposal_error'] = "Revisi proposal gagal!";

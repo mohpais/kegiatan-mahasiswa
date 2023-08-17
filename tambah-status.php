@@ -66,20 +66,44 @@
                                     </div>
                                 </div>
                                 <div class="card-body pb-2">
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Nama Status</label>
-                                        <input 
-                                            id="nama"
-                                            name="nama"
-                                            class="form-control" 
-                                            type="text" 
-                                            placeholder="Masukkan nama status ..."
-                                            required
-                                        />
+                                    <div class="row">
+                                        <div class="col">
+                                            <?php 
+                                                if (isset($_SESSION['add_status_error'])) {
+                                                    $message = $_SESSION['add_status_error'];
+                                                    echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
+                                                    unset($_SESSION['add_status_error']);
+                                                } 
+                                            ?>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Deskripsi</label>
-                                        <textarea name="deskripsi" id="deskripsi" cols="30" rows="5" class="form-control"></textarea>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Nama Status <span class="text-danger">*</span></label>
+                                                <input 
+                                                    id="nama"
+                                                    name="nama"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    placeholder="Masukkan nama status ..."
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Deskripsi</label>
+                                                <textarea name="deskripsi" id="deskripsi" cols="30" rows="5" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <p class="text-xxs text-muted">(<span class="text-danger"><b>*</b></span>) <b>Mandatori</b> wajib diisi.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer border">
@@ -90,6 +114,11 @@
                                     </div>
                                     <?php
                                         if (isset($_POST['save'])) {
+                                            if (empty($_POST['nama'])) {
+                                                $_SESSION['add_status_error'] = "Mohon untuk lengkapi data!";
+                                                echo "<meta http-equiv='refresh' content='1;url=tambah-status.php'>";
+                                                exit;
+                                            }
                                             // Prepare and execute the query to insert data to tbl_proses
                                             $query = "INSERT INTO tbl_status (nama, deskripsi) VALUES (:nama, :deskripsi)";
                                             $stmt = $conn->prepare($query);
@@ -100,11 +129,11 @@
                                             );
                                             $stmt->execute($params);
                                             if ($conn->lastInsertId() > 0) {
-
-                                                echo "<div class='alert alert-success text-white'>Master status berhasil tersimpan</div>";
+                                                $_SESSION['add_status_success'] = "Data master status berhasil tersimpan!";
                                                 echo "<meta http-equiv='refresh' content='1;url=master-status.php'>";
                                             } else {
-                                                echo "<div class='alert alert-danger'>Master status gagal tersimpan</div>";
+                                                $_SESSION['add_status_error'] = "Data master status gagal tersimpan!";
+                                                echo "<meta http-equiv='refresh' content='1;url=tambah-status.php'>";
                                             }
                                         }
                                     ?>

@@ -13,12 +13,24 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <?php
+    $id = $_GET['id'];
     // Include the functions.php file from the main theme directory
     require_once 'helpers/authorize.php';
     require_once 'helpers/functions.php';
     require_once 'config/database.php';
     // Perform database connection
     $conn = connect_to_database();
+    // jalankan query
+    $stmt = $conn->prepare("SELECT * FROM tbl_tahun_ajar WHERE id = :id");
+    // bind parameter ke query
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result['tahun']) {
+        $seperateTahun = explode("/", $result['tahun']);
+        $tahun_awal = $seperateTahun[0];
+        $tahun_akhir = $seperateTahun[1];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +73,7 @@
                                             <a href="master-tahun-ajaran.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
                                         </div>
                                         <div class="col-10 ps-1 my-auto">
-                                            <h6 class="mb-0">Tambah Tahun Ajaran</h6>
+                                            <h6 class="mb-0">Edit Tahun Ajaran</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -69,10 +81,10 @@
                                     <div class="row">
                                         <div class="col">
                                             <?php 
-                                                if (isset($_SESSION['add_tahun_error'])) {
-                                                    $message = $_SESSION['add_tahun_error'];
+                                                if (isset($_SESSION['edit_tahun_error'])) {
+                                                    $message = $_SESSION['edit_tahun_error'];
                                                     echo "<div class='alert alert-danger text-white' role='alert'><strong>Pemberitahuan!</strong> " . $message . "</div>";
-                                                    unset($_SESSION['add_tahun_error']);
+                                                    unset($_SESSION['edit_tahun_error']);
                                                 } 
                                             ?>
                                         </div>
@@ -90,6 +102,7 @@
                                                     class="form-control" 
                                                     type="text" 
                                                     placeholder="Masukkan tahun ajaran awal ..."
+                                                    value="<?php echo $tahun_awal; ?>"
                                                     required
                                                 />
                                             </div>
@@ -106,6 +119,7 @@
                                                     class="form-control" 
                                                     type="text" 
                                                     placeholder="Masukkan tahun ajaran akhir ..."
+                                                    value="<?php echo $tahun_akhir; ?>"
                                                     required
                                                 />
                                             </div>
@@ -120,29 +134,31 @@
                                 <div class="card-footer border">
                                     <div class="row">
                                         <div class="col-12 text-center">
-                                            <button name="save" class="btn btn-sm btn-primary">Simpan</button>
+                                            <button name="update" class="btn btn-sm btn-primary">Edit</button>
                                         </div>
                                     </div>
                                     <?php
-                                        if (isset($_POST['save'])) {
+                                        if (isset($_POST['update'])) {
                                             if (empty($_POST['tahun_awal']) || empty($_POST['tahun_akhir'])) {
-                                                $_SESSION['add_tahun_error'] = "Mohon untuk lengkapi data!";
-                                                echo "<meta http-equiv='refresh' content='1;url=tambah-tahun-ajaran.php'>";
+                                                $_SESSION['edit_tahun_error'] = "Mohon untuk lengkapi data!";
+                                                echo "<meta http-equiv='refresh' content='1;url=edit-tahun-ajaran.php?id=" . $id . "'>";
                                                 exit;
                                             } else {
                                                 $tahun = $_POST['tahun_awal'] . '/' . $_POST['tahun_akhir'];
                                                 // Prepare and execute the query to insert data to tbl_proses
-                                                $query = "INSERT INTO tbl_tahun_ajar (tahun) VALUES (:tahun)";
+                                                $query = "UPDATE tbl_tahun_ajar SET tahun = :tahun WHERE id = :id)";
                                                 $stmt = $conn->prepare($query);
                                                 // bind parameter ke query
                                                 $stmt->bindParam(':tahun', $tahun);
-                                                $stmt->execute();
-                                                if ($conn->lastInsertId() > 0) {
-                                                    $_SESSION['add_tahun_success'] = "Data master tahun ajaran berhasil tersimpan!";
+                                                $stmt->bindParam(':id', $id);
+                                                $success = $stmt->execute();
+                                                if ($success) {
+                                                    $_SESSION['edit_tahun_success'] = "Tahun ajaran berhasil tersimpan!";
                                                     echo "<meta http-equiv='refresh' content='1;url=master-tahun-ajaran.php'>";
                                                 } else {
-                                                    $_SESSION['add_tahun_success'] = "Data master tahun ajaran gagal tersimpan!";
-                                                    echo "<meta http-equiv='refresh' content='1;url=tambah-tahun-ajaran.php'>";
+                                                    $_SESSION['edit_tahun_error'] = "Tahun ajaran gagal tersimpan!";
+                                                    echo "<meta http-equiv='refresh' content='1;url=edit-tahun-ajaran.php?id=" . $id . "'>";
+                                                    exit;
                                                 }
                                             }
                                         }

@@ -50,7 +50,7 @@
                     <h6 class="ps-3 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2 <?php echo get_current_url() == 'master kategori' ? 'active' : '' ?>" href="user.php">
+                    <a class="nav-link px-2 <?php echo get_current_url() == 'master kategori' ? 'active' : '' ?>" href="master-kategori.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-support-16 text-warning text-sm opacity-10"></i>
                         </div>
@@ -58,15 +58,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <!-- <?php
-                        $currentURL = get_current_url();
-                        echo $currentURL . '</br>';
-                        if ($currentURL == "master status") {
-                            echo "sama";
-                        } else {
-                            echo "tidak sama";
-                        }
-                    ?> -->
                     <a class="nav-link px-2 <?php echo get_current_url() == 'master status' ? 'active' : '' ?>" href="master-status.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-support-16 text-warning text-sm opacity-10"></i>

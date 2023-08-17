@@ -18,7 +18,7 @@
 
     // Check if the user is already logged in, redirect to the dashboard
     if (isset($_SESSION['user'])) {
-        header('Location: index.php');
+        header('Location: dashboard.php');
         exit;
     } else {
         session_destroy();

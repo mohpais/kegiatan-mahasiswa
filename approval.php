@@ -66,7 +66,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Tipe Pengajuan</th>
+                                                <th class="ps-2 text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Tipe Pengajuan</th>
                                                 <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Judul</th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Kategori</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Diajukan pada</th>
@@ -93,7 +93,7 @@
                                                         JOIN 
                                                             tbl_kategori kg 
                                                             ON
-                                                                kg.kd_kategori = SUBSTRING_INDEX(kd_proposal, '-', 1)
+                                                                kg.kd_kategori = ps.kd_kategori
                                                         JOIN 
                                                             tbl_status sp 
                                                             ON
@@ -105,7 +105,7 @@
                                                         LEFT JOIN 
                                                             tbl_lpj lpj 
                                                             ON
-                                                                lpj.kd_proposal = ps.kd_proposal
+                                                                lpj.proposal_id = ps.id
                                                     WHERE
                                                         ps.status_id = 2
                                                 ");
@@ -117,15 +117,15 @@
                                             <?php foreach ($results as $row) { ?>
                                             <tr>
                                                 <td class="text-center text-xs"><?php echo $no; ?></td>
-                                                <td class="align-middle text-center text-xs">
-                                                    <span class="text-uppercase"><?php echo $row['lpj_id'] ? 'LPJ' : 'Proposal' ?></span>
+                                                <td class="">
+                                                    <span class="text-uppercase text-xs font-weight-bold"><?php echo $row['lpj_id'] ? 'LPJ' : 'Proposal' ?></span>
                                                 </td>
                                                 <td class="">
                                                     <?php 
                                                         $originalString = $row['judul']; // Replace with your actual string
 
-                                                        if (strlen($originalString) > 40) {
-                                                            $shortenedString = substr($originalString, 0, 40) . '...';
+                                                        if (strlen($originalString) > 20) {
+                                                            $shortenedString = substr($originalString, 0, 20) . '...';
                                                         } else {
                                                             $shortenedString = $originalString;
                                                         }

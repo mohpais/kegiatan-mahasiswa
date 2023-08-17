@@ -37,7 +37,7 @@
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
         <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
         <!-- CSS Files -->
-        <link id="pagestyle" href="./assets/css/argon-dashboard.css?v=3.0.4" rel="stylesheet" />
+        <link id="pagestyle" href="./assets/css/argon-dashboard.css" rel="stylesheet" />
     </head>
 
     <body class="g-sidenav-show bg-gray-100">
@@ -95,7 +95,7 @@
                         <div class="card-header border pb-3">
                             <div class="row">
                                 <div class="col-xl-10 col-12 my-auto">
-                                    <h6 class="mb-1">Daftar Master Status</h6>
+                                    <h6 class="mb-1">Master Status Pengajuan</h6>
                                     <p class="text-xs mb-0 text-secondary font-weight-bold">Datfar status untuk pengajuan.</p>
                                 </div>
                                 <div class="col-xl-auto my-auto ms-auto">

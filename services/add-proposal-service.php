@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_proposal LIKE '%" . $kd_kategori . "%'");
+    $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
     $insert = insertProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user']);
     if ($insert > 0) {
         $_SESSION['add_proposal_success'] = "Pengajuan proposal anda telah berhasil!";
@@ -51,18 +51,20 @@ function insertProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
         ":kd_user" => $kd_user
     );
     $stmt->execute($params);
-
-    // Prepare and execute the query to insert data to tbl_proses
-    $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :akun_id, 1), (:kd_proposal, :akun_id, 2)";
-    $stmt = $conn->prepare($query);
-    // bind parameter ke query
-    $params = array(
-        ":kd_proposal" => $kd_proposal,
-        ":akun_id" => $_SESSION['user']['id']
-    );
-    $stmt->execute($params);
-    $last_flow_id = $conn->lastInsertId();
-    if ($last_flow_id) return $conn->lastInsertId();
+    $last_proposal_id = $conn->lastInsertId();
+    if ($last_proposal_id > 0) {
+        // Prepare and execute the query to insert data to tbl_proses
+        $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 1), (:proposal_id, :akun_id, 2)";
+        $stmt = $conn->prepare($query);
+        // bind parameter ke query
+        $params = array(
+            ":proposal_id" => $last_proposal_id,
+            ":akun_id" => $_SESSION['user']['id']
+        );
+        $stmt->execute($params);
+        $last_flow_id = $conn->lastInsertId();
+        if ($last_flow_id > 0) return $conn->lastInsertId();
+    }
 
     return 0;
 }

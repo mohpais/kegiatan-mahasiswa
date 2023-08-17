@@ -18,7 +18,7 @@
 
     // Check if the user is already logged in, redirect to the dashboard
     if (isset($_SESSION['user'])) {
-        header('Location: index.php');
+        header('Location: dashboard.php');
         exit;
     } else {
         session_destroy();
@@ -72,7 +72,6 @@
                                             <input 
                                                 name="kd_user"
                                                 type="text" 
-                                                onkeypress="return onlyNumberKey(event)"
                                                 maxlength="11"
                                                 class="form-control form-control-lg" 
                                                 placeholder="Kode Mahasiswa / Kode Dosen" 
@@ -100,7 +99,7 @@
                             </div>
                         </div>
                         <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-                            <div class="position-relative bg-gradient-ubk h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://portal.ubk.ac.id/siakad/logo_backg1.jpg');
+                            <div class="position-relative bg-gradient-ubk h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('assets/img/logo_backg1.png');
                         background-position: center; background-repeat: no-repeat; background-size: cover;">
                                 <span class="mask bg-gradient-ubk opacity-6"></span>
                                 <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new currency"</h4>

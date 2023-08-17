@@ -31,7 +31,7 @@
             JOIN 
                 tbl_kategori kg 
                 ON
-                    kg.kd_kategori = SUBSTRING_INDEX(kd_proposal, '-', 1)
+                    kg.kd_kategori = ps.kd_kategori
             JOIN 
                 tbl_status sp 
                 ON
@@ -40,10 +40,8 @@
             ps.kd_proposal = :kd_proposal
     ");
     // bind parameter ke query
-    $params = array(
-        ":kd_proposal" => $kd_proposal
-    );
-    $stmt->execute($params);
+    $stmt->bindParam(':kd_proposal', $kd_proposal);
+    $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -84,103 +82,114 @@
                                 <div class="card-header border pb-3">
                                     <div class="row">
                                         <div class="col-auto pe-0">
-                                            <a href="index.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
+                                            <a href="dashboard.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
                                         </div>
                                         <div class="col-10 ps-1 my-auto">
-                                            <h6 class="mb-0">Review Proposal</h6>
+                                            <h6 class="mb-0">Tambah LPJ</h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body pb-2">
-                                    <!-- <?php 
-                                        if (isset($_SESSION['add_proposal_error'])) {
-                                    ?>
-                                        <div class="alert alert-danger" role="alert">
-                                            <strong>Pemberitahuan!</strong> <?php echo $_SESSION['add_proposal_error'] ?>
-                                        </div>
-                                    <?php } ?>
-                                    <?php 
-                                        if (isset($_SESSION['add_proposal_success'])) {
-                                    ?>
-                                        <div class="alert alert-success" role="alert">
-                                            <?php echo $_SESSION['add_proposal_success'] ?>
-                                        </div>
-                                    <?php } ?> -->
-                                    <div class="form-group">
-                                        <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            value="<?php echo $result['kd_proposal'] ?>" 
-                                            disabled
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Judul Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            value="<?php echo $result['judul'] ?>" 
-                                            disabled
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Tahun Ajar</label>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <select name="semester" id="semester" class="form-select" disabled>
-                                                    <option value="" disabled>-- Pilih salah satu --</option>
-                                                    
-                                                    <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
-                                                    <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-6">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
                                                 <input 
-                                                    id="tahun"
-                                                    name="tahun"
+                                                    id="judul"
+                                                    name="judul"
                                                     class="form-control" 
                                                     type="text" 
-                                                    value="<?php echo $result['tahun'] ?>" 
+                                                    value="<?php echo $result['kd_proposal'] ?>" 
                                                     disabled
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                    <?php 
-                                        $seperateCode = explode("-", $result['kd_proposal']);
-                                        $kd_kategori = $seperateCode[0];
-                                    ?>
-                                    <?php
-                                            // Perform database connection
-                                            $conn = connect_to_database();
-                                            // jalankan query
-                                            $stmt = $conn->prepare("
-                                                SELECT kd_kategori, nama FROM tbl_kategori WHERE kd_kategori = :kd_kategori");
-                                            $params = array(
-                                                ":kd_kategori" => $kd_kategori
-                                            );
-                                            $stmt->execute($params);
-                                            $item = $stmt->fetch(PDO::FETCH_ASSOC);
-                                        ?>
-                                    <div class="form-group">
-                                        <label for="kategori" class="form-control-label">Kategori</label>
-                                        <select name="kategori" id="kategori" class="form-control" disabled>
-                                            <option value="" disabled>-- Pilih salah satu --</option>
-                                            <option value="<?php echo $item['kd_kategori'] ?>" selected><?php echo $item['nama'] ?></option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Judul Proposal</label>
+                                                <input 
+                                                    id="judul"
+                                                    name="judul"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    value="<?php echo $result['judul'] ?>" 
+                                                    disabled
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="link_dokumen" class="form-control-label">Link Dokumen</label>
-                                        <input class="form-control" type="link_dokumen" id="link_dokumen" name="link_dokumen" value="<?php echo $result['link_dokumen'] ?>" disabled />
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="tahun" class="form-control-label">Tahun</label>
+                                                <?php
+                                                    // Perform database connection
+                                                    $conn = connect_to_database();
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare("SELECT * FROM tbl_tahun_ajar ORDER BY tahun DESC");
+                                                    // bind parameter ke query
+                                                    $stmt->execute();
+                                                    $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <select name="tahun" id="tahun" class="form-select" disabled>
+                                                    <option value="" disabled selected>-- Pilih tahun ajaran --</option>
+                                                    <?php foreach ($tahunAjaran as $row) { ?>
+                                                        <option value="<?php echo $row['tahun'] ?>" <?php echo $result['tahun'] == $row['tahun'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="semester" class="form-control-label">Semester</label>
+                                                <select name="semester" id="semester" class="form-select" disabled>
+                                                    <option value="" disabled selected>-- Pilih semester --</option>
+                                                    <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
+                                                    <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="url" class="form-control-label">Link Foto</label>
-                                        <input class="form-control" type="url" id="url" name="url" placeholder="Masukkan link foto ..." required />
+                                    <div class="row">
+                                        <div class="col">
+                                            <?php
+                                                $seperateCode = explode("-", $result['kd_proposal']);
+                                                $kd_kategori = $seperateCode[0];
+                                                // Perform database connection
+                                                $conn = connect_to_database();
+                                                // jalankan query
+                                                $stmt = $conn->prepare("SELECT kd_kategori, nama FROM tbl_kategori WHERE kd_kategori = :kd_kategori");
+                                                // bind parameter ke query
+                                                $stmt->bindParam(':kd_kategori', $kd_kategori);
+                                                $stmt->execute();
+                                                $item = $stmt->fetch(PDO::FETCH_ASSOC);
+                                            ?>
+                                            <div class="form-group">
+                                                <label for="kategori" class="form-control-label">Kategori</label>
+                                                <select name="kategori" id="kategori" class="form-control" disabled>
+                                                    <option value="" disabled>-- Pilih salah satu --</option>
+                                                    <option value="<?php echo $item['kd_kategori'] ?>" selected><?php echo $item['nama'] ?></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="link_dokumen" class="form-control-label">Link Dokumen</label>
+                                                <input class="form-control" type="link_dokumen" id="link_dokumen" name="link_dokumen" value="<?php echo $result['link_dokumen'] ?>" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="url" class="form-control-label">Link Foto</label>
+                                                <input class="form-control" type="url" id="url" name="url" placeholder="Masukkan link foto ..." required />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer border">
@@ -192,29 +201,29 @@
                                     <?php
                                         if (isset($_POST['submit'])) {
                                             // Prepare and execute the query to insert data to tbl_lpj
-                                            $queryInsertLPJ = "INSERT INTO tbl_lpj (kd_proposal, link_foto, created_by) VALUES (:kd_proposal, :link_foto, :kd_user)";
+                                            $queryInsertLPJ = "INSERT INTO tbl_lpj (proposal_id, link_foto, created_by) VALUES (:proposal_id, :link_foto, :kd_user)";
                                             $insert = $conn->prepare($queryInsertLPJ);
                                             // bind parameter ke query
                                             $params = array(
-                                                ":kd_proposal" => $kd_proposal,
+                                                ":proposal_id" => $result['id'],
                                                 ":link_foto" => $_POST['url'],
                                                 ":kd_user" => $_SESSION['user']['kd_user']
                                             );
                                             $insert->execute($params);
                                             if ($conn->lastInsertId() > 0) {
                                                 // Prepare and execute the query to insert data to tbl_proses
-                                                $queryInsertProses = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :kd_user, 10), (:kd_proposal, :kd_user, 2)";
+                                                $queryInsertProses = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :kd_user, 10), (:proposal_id, :kd_user, 2)";
                                                 $insert = $conn->prepare($queryInsertProses);
                                                 // bind parameter ke query
                                                 $params = array(
-                                                    ":kd_proposal" => $kd_proposal,
+                                                    ":proposal_id" => $result['id'],
                                                     ":kd_user" => $_SESSION['user']['id']
                                                 );
                                                 $insert->execute($params);
                                                 if ($conn->lastInsertId() > 0) {
-                                                    $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE kd_proposal = :kd_proposal";
+                                                    $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE id = :proposal_id";
                                                     $update = $conn->prepare($queryUpdate);
-                                                    $update->bindParam(':kd_proposal', $kd_proposal);
+                                                    $update->bindParam(':proposal_id', $result['id']);
 
                                                     $success = $update->execute();
                                                     if ($success) {

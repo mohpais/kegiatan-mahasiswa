@@ -29,7 +29,7 @@
             JOIN 
                 tbl_kategori kg 
                 ON
-                    kg.kd_kategori = SUBSTRING_INDEX(kd_proposal, '-', 1)
+                    kg.kd_kategori = ps.kd_kategori
             JOIN 
                 tbl_status sp 
                 ON
@@ -37,7 +37,7 @@
             LEFT JOIN 
                 tbl_lpj lpj 
                 ON
-                    lpj.kd_proposal = ps.kd_proposal
+                    lpj.proposal_id = ps.id
         WHERE
             status_id IN (4, 7) 
     ";
@@ -164,15 +164,15 @@
                             <div class="card-header border pb-0">
                                 <div class="row">
                                     <div class="col-auto my-auto">
-                                        <h6 class="mb-0">Daftar Pengajuan</h6>
-                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Pengajuan yang telah diajukan oleh Mahasiswa per tahun.</p>
+                                        <h6 class="mb-0">Pengajuan Diterima / Ditolak</h6>
+                                        <p class="text-xs mb-0 text-secondary font-weight-bold">Daftar pengajuan yang telah diterima atau ditolak per tahun.</p>
                                     </div>
                                 </div>
                                 <form method="post">
                                     <div class="row mt-2 border-top pt-3">
-                                        <div class="col">
+                                        <!-- <div class="col">
                                             <input id="kd_proposal" name="kd_proposal" type="text" class="form-control" placeholder="Masukkan kode" value="<?php echo $id; ?>" />
-                                        </div>
+                                        </div> -->
                                         <div class="col">
                                             <?php
                                                 // Perform database connection
@@ -193,15 +193,34 @@
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <input name="tahun" type="text" class="form-control" placeholder="Masukkan tahun" value="<?php echo $tahun; ?>"
-                                                        onkeypress="return onlyNumberKey(event)" maxlength="4" minlength="4"  />
+                                            <?php
+                                                // Perform database connection
+                                                $conn = connect_to_database();
+                                                // jalankan query
+                                                $stmt = $conn->prepare("SELECT * FROM tbl_tahun_ajar ORDER BY tahun DESC");
+                                                // bind parameter ke query
+                                                $stmt->execute();
+                                                $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
+                                            <select name="tahun" id="tahun" class="form-select">
+                                                <option value="" disabled selected>-- Pilih tahun ajaran --</option>
+                                                <?php foreach ($tahunAjaran as $row) { ?>
+                                                    <option value="<?php echo $row['tahun'] ?>"><?php echo $row['tahun'] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                            <!-- <input name="tahun" type="text" class="form-control" placeholder="Masukkan tahun" value="<?php echo $tahun; ?>"
+                                                        onkeypress="return onlyNumberKey(event)" maxlength="4" minlength="4"  /> -->
                                         </div>
-                                        <div class="col-auto">
-                                            <?php if (!empty($id) ||!empty($kategori) || !empty($tahun)) { ?>
+                                        <div class="col-auto ps-0">
+                                            <!-- <?php if (!empty($id) ||!empty($kategori) || !empty($tahun)) { ?>
                                                 <a href="laporan.php" type="button" class="btn btn-success">Reset</a>
                                             <?php } else { ?>
                                                 <button name="search" class="btn btn-success">Cari data</button>
+                                            <?php } ?> -->
+                                            <?php if (!empty($id) ||!empty($kategori) || !empty($tahun)) { ?>
+                                                <a href="laporan.php" type="button" class="btn btn-success"><i class="fa fa-redo"></i></a>
                                             <?php } ?>
+                                            <button name="search" class="btn btn-success">Cari data</button>
                                         </div>
                                     </div>
                                     <?php 
@@ -226,7 +245,6 @@
                                                     if ($index < count($dataFilters) - 1) $filter = $filter . '&';
                                                 }
                                                 echo "<meta http-equiv='refresh' content='1;url=laporan.php?" . $filter . "'>";
-                                                // header('Location: edit-proposal.php?' . $filter);
                                             }
                                         }
                                     ?>
@@ -237,114 +255,106 @@
                                     <table class="table align-items-center mb-0">
                                         <thead>
                                             <tr>
-                                                <!-- <th class="text-uppercase text-secondary text-center text-xxs font-weight-bolder opacity-5">#</th> -->
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Kode Proposal</th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Kategori</th>
                                                 <th class="text-uppercase px-2 text-secondary text-xxs font-weight-bolder opacity-8">Judul</th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Link Proposal</th>
                                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Link LPJ</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Proposal</th>
-                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Proposal diajukan pada</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8">Status Pengajuan</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-8 ps-2">Diajukan pada</th>
                                                 <th class="text-secondary opacity-8"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                                $no = 1;
-                                                
-                                            ?>
                                             <?php if (count($results) > 0) {?>
-                                            <?php foreach ($results as $row) { ?>
-                                            <tr>
-                                                <!-- <td class="text-center text-xs"><?php echo $no; ?></td> -->
-                                                <td class="text-center text-xs"><?php echo $row['kd_proposal']; ?></td>
-                                                <td class="">
-                                                    <?php 
-                                                        $originalString = $row['judul']; // Replace with your actual string
+                                                <?php foreach ($results as $row) { ?>
+                                                    <tr>
+                                                        <td class="text-center text-xs"><?php echo $row['kd_proposal']; ?></td>
+                                                        <td class="">
+                                                            <p class="text-xs text-secondary font-weight-bold mb-0"><?php echo $row['kategori'] ?></p>
+                                                        </td>
+                                                        <td class="">
+                                                            <?php 
+                                                                $originalString = $row['judul']; // Replace with your actual string
 
-                                                        if (strlen($originalString) > 40) {
-                                                            $shortenedString = substr($originalString, 0, 40) . '...';
-                                                        } else {
-                                                            $shortenedString = $originalString;
-                                                        }
-                                                    ?>
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $shortenedString ?></p>
-                                                </td>
-                                                <td class="">
-                                                    <p class="text-xs text-secondary mb-0"><?php echo $row['kategori'] ?></p>
-                                                </td>
-                                                <td class="text-center text-xs">
-                                                    <a href="<?php echo $row['link_dokumen'] ?>" target="_blank" class="text-xs text-primary mb-0">
-                                                        <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
-                                                    </a>
-                                                </td>
-                                                <td class="align-middle text-xs">
-                                                    <?php if ($row['link_foto']) { ?>
-                                                        <a href="<?php echo $row['link_foto'] ?>" target="_blank" class="text-xs text-primary mb-0">
-                                                            <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
-                                                        </a>
-                                                    <?php } else { ?>
-                                                        <span class="badge bg-secondary">Belum ada data LPJ</span>
-                                                    <?php } ?>
-                                                </td>
-                                                <td class="align-middle text-center text-sm">
-                                                    <?php 
-                                                        $namaStatus = $row['status'];
-                                                        $badgeColor = "success";
-                                                        if ($row["status_id"] == 2) {
-                                                            $badgeColor = "warning";
-                                                        } elseif ($row["status_id"] == 4) {
-                                                            $badgeColor = "danger";
-                                                        } elseif ($row["status_id"] == 6) {
-                                                            $badgeColor = "primary";
-                                                        } 
-                                                    ?>
-                                                    <span class="badge badge-sm bg-gradient-<?php echo $badgeColor; ?>"><?php echo $namaStatus ?></span>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <span class="text-secondary text-xs font-weight-bold">
-                                                        <?php
-                                                            $timestamp = strtotime($row['created_at']);
-                                                            $formattedDate = date('d-M-Y H:m', $timestamp);
+                                                                if (strlen($originalString) > 20) {
+                                                                    $shortenedString = substr($originalString, 0, 20) . '...';
+                                                                } else {
+                                                                    $shortenedString = $originalString;
+                                                                }
+                                                            ?>
+                                                            <p class="text-xs font-weight-bold mb-0"><?php echo $shortenedString ?></p>
+                                                        </td>
+                                                        <td class="text-xs">
+                                                            <a href="<?php echo $row['link_dokumen'] ?>" target="_blank" class="text-xs text-primary mb-0">
+                                                                <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
+                                                            </a>
+                                                        </td>
+                                                        <td class="align-middle text-xs">
+                                                            <?php if ($row['link_foto']) { ?>
+                                                                <a href="<?php echo $row['link_foto'] ?>" target="_blank" class="text-xs text-primary mb-0">
+                                                                    <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
+                                                                </a>
+                                                            <?php } else { ?>
+                                                                <span class="badge bg-secondary">Belum ada data LPJ</span>
+                                                            <?php } ?>
+                                                        </td>
+                                                        <td class="align-middle text-center text-sm">
+                                                            <?php 
+                                                                $namaStatus = $row['status'];
+                                                                $badgeColor = "success";
+                                                                if ($row["status_id"] == 2) {
+                                                                    $badgeColor = "warning";
+                                                                } elseif ($row["status_id"] == 4) {
+                                                                    $badgeColor = "danger";
+                                                                } elseif ($row["status_id"] == 6) {
+                                                                    $badgeColor = "primary";
+                                                                } 
+                                                            ?>
+                                                            <span class="badge badge-sm bg-gradient-<?php echo $badgeColor; ?>"><?php echo $namaStatus ?></span>
+                                                        </td>
+                                                        <td class="align-middle">
+                                                            <span class="text-secondary text-xs font-weight-bold">
+                                                                <?php
+                                                                    $timestamp = strtotime($row['created_at']);
+                                                                    $formattedDate = date('d-M-Y H:m', $timestamp);
 
-                                                            echo $formattedDate;
-                                                        ?>
-                                                    </span>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    <?php if ($row['status_id'] == 3 && $row['lpj_id'] == null) { ?>
-                                                        <a href="tambah-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                            <span class="btn-inner--icon me-1"><i class="fa fa-plus"></i></span>
-                                                            <span class="btn-inner--text">Buat Laporan</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row['status_id'] != 3 || $row['lpj_id'] ) { ?>
-                                                        <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
-                                                            <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
-                                                            <!-- <span class="btn-inner--text">Lihat <?php echo $row['lpj_id'] ? 'LPJ' : 'Proposal' ?></span> -->
-                                                            <span class="btn-inner--text">Lihat Pengajuan</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
-                                                        <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                            <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
-                                                            <span class="btn-inner--text">Edit Proposal</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                    <?php if ($row['status_id'] == 6 && $row['lpj_id']) { ?>
-                                                        <a href="edit-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
-                                                            <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
-                                                            <span class="btn-inner--text">Edit LPJ</span>
-                                                        </a>
-                                                    <?php } ?>
-                                                </td>
-                                            </tr>
-                                            <?php $no++; ?>
-                                            <?php } ?>
+                                                                    echo $formattedDate;
+                                                                ?>
+                                                            </span>
+                                                        </td>
+                                                        <td class="align-middle text-center">
+                                                            <?php if ($row['status_id'] == 3 && $row['lpj_id'] == null) { ?>
+                                                                <a href="tambah-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-plus"></i></span>
+                                                                    <span class="btn-inner--text">Buat Laporan</span>
+                                                                </a>
+                                                            <?php } ?>
+                                                            <?php if ($row['status_id'] != 3 || $row['lpj_id'] ) { ?>
+                                                                <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
+                                                                    <span class="btn-inner--text">Lihat Pengajuan</span>
+                                                                </a>
+                                                            <?php } ?>
+                                                            <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
+                                                                <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
+                                                                    <span class="btn-inner--text">Edit Proposal</span>
+                                                                </a>
+                                                            <?php } ?>
+                                                            <?php if ($row['status_id'] == 6 && $row['lpj_id']) { ?>
+                                                                <a href="edit-lpj.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                    <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
+                                                                    <span class="btn-inner--text">Edit LPJ</span>
+                                                                </a>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>
                                             <?php } else { ?>
-                                            <tr>
-                                                <td class="text-center" colspan="8"><div class="h6">Tidak ada pengajuan</div></td>
-                                            </tr>
+                                                <tr>
+                                                    <td class="text-center" colspan="8"><div class="h6">Tidak ada pengajuan</div></td>
+                                                </tr>
                                             <?php } ?>
                                         </tbody>
                                     </table>

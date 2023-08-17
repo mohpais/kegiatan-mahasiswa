@@ -78,78 +78,89 @@
                                             <?php echo $_SESSION['add_proposal_success'] ?>
                                         </div>
                                     <?php } ?>
-                                    <div class="form-group">
-                                        <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            placeholder="Generate Otomatis" 
-                                            disabled
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Judul Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            placeholder="Masukkan judul proposal" 
-                                            required
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Tahun Ajar</label>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <select name="semester" id="semester" class="form-select" required>
-                                                    <option value="" disabled>-- Pilih salah satu --</option>
-                                                    <option value="ganjil">Ganjil</option>
-                                                    <option value="genap">Genap</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-6">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Judul Proposal <span class="text-danger">*</span></label>
                                                 <input 
-                                                    id="tahun"
-                                                    name="tahun"
+                                                    id="judul"
+                                                    name="judul"
+                                                    class="form-control" 
                                                     type="text" 
-                                                    class="form-control"
-                                                    onkeypress="return onlyNumberKey(event)"
-                                                    maxlength="4" 
-                                                    placeholder="Masukkan tahun ajaran" 
+                                                    placeholder="Masukkan judul proposal" 
                                                     required
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                    <?php
-                                        // Perform database connection
-                                        $conn = connect_to_database();
-                                        // jalankan query
-                                        $stmt = $conn->prepare("
-                                            SELECT kd_kategori, nama FROM tbl_kategori WHERE is_active = 1");
-                                        $stmt->execute();
-                                        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                    ?>
-                                    <div class="form-group">
-                                        <label for="kategori" class="form-control-label">Kategori</label>
-                                        <select name="kategori" id="kategori" class="form-control" required>
-                                            <option value="" disabled>-- Pilih salah satu --</option>
-                                            <?php 
-                                                foreach ($results as $item) {
-                                            ?>
-                                                <option value="<?php echo $item['kd_kategori'] ?>"><?php echo $item['nama'] ?></option>
-                                            <?php } ?>
-                                            <!-- <option value="PPM">PPM</option>
-                                            <option value="Seminar">Seminar</option>
-                                            <option value="Kuliah Umum">Kuliah Umum</option> -->
-                                        </select>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="tahun" class="form-control-label">Tahun Ajaran<span class="text-danger">*</span></label>
+                                                <?php
+                                                    // Perform database connection
+                                                    $conn = connect_to_database();
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare("SELECT * FROM tbl_tahun_ajar ORDER BY tahun DESC");
+                                                    // bind parameter ke query
+                                                    $stmt->execute();
+                                                    $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <select name="tahun" id="tahun" class="form-select" required>
+                                                    <option value="" disabled selected>-- Pilih tahun ajaran --</option>
+                                                    <?php foreach ($tahunAjaran as $row) { ?>
+                                                        <option value="<?php echo $row['tahun'] ?>"><?php echo $row['tahun'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="semester" class="form-control-label">Semester <span class="text-danger">*</span></label>
+                                                <select name="semester" id="semester" class="form-select" required>
+                                                    <option value="" disabled selected>-- Pilih semester --</option>
+                                                    <option value="ganjil">Ganjil</option>
+                                                    <option value="genap">Genap</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="url" class="form-control-label">Link Proposal</label>
-                                        <input class="form-control" type="url" id="url" name="url" required />
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="kategori" class="form-control-label">Kategori <span class="text-danger">*</span></label>
+                                                <?php
+                                                    // Perform database connection
+                                                    $conn = connect_to_database();
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare("
+                                                        SELECT kd_kategori, nama FROM tbl_kategori WHERE is_active = 1");
+                                                    $stmt->execute();
+                                                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <select name="kategori" id="kategori" class="form-control" required>
+                                                    <option value="" disabled selected>-- Pilih kategori --</option>
+                                                    <?php 
+                                                        foreach ($results as $item) {
+                                                    ?>
+                                                        <option value="<?php echo $item['kd_kategori'] ?>"><?php echo $item['nama'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="url" class="form-control-label">Link Proposal <span class="text-danger">*</span></label>
+                                                <input class="form-control" type="url" id="url" name="url" required />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <p class="text-xxs text-muted">(<span class="text-danger"><b>*</b></span>) <b>Mandatori</b> wajib diisi.</p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer border">

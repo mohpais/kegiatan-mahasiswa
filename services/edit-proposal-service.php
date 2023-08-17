@@ -6,7 +6,9 @@ require_once '../config/database.php';
 $user = $_SESSION['user'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'];
     $kd_proposal = $_POST['kd_proposal'];
+    $kd_kategori = $_POST['kd_kategori'];
     $judul = $_POST['judul'];
     $semester = $_POST['semester'];
     $tahun = $_POST['tahun'];
@@ -18,7 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $update = updateProposal($kd_proposal, $judul, $semester, $tahun, $url);
+    $conn = connect_to_database();
+    $stmt = $conn->prepare("SELECT * FROM tbl_proposal WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $currentProposal = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo $kd_proposal . '<br />';
+    if (isset($currentProposal) && $currentProposal['kd_kategori'] != $kd_kategori) {
+        $kd_proposal = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
+    }
+
+    $update = updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url);
     if ($update > 0) {
         $_SESSION['edit_proposal_success'] = "Revisi proposal telah berhasil!";
         // Redirect back to the add proposal page
@@ -32,35 +44,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-function updateProposal($kd_proposal, $judul, $semester, $tahun, $url) {
+function updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url) {
     // Perform database connection
     $conn = connect_to_database();
 
     // Prepare and execute the query to insert data to tbl_proposal
-    $query = "UPDATE tbl_proposal SET status_id = 2, judul = :judul, semester = :semester, tahun = :tahun, link_dokumen = :link_dokumen WHERE kd_proposal = :kd_proposal";
+    $query = "UPDATE tbl_proposal SET kd_proposal = :kd_proposal, kd_kategori = :kd_kategori, status_id = 2, judul = :judul, semester = :semester, tahun = :tahun, link_dokumen = :link_dokumen WHERE id = :id";
     $stmt = $conn->prepare($query);
     // bind parameter ke query
     $params = array(
+        ":kd_proposal" => $kd_proposal,
+        ":kd_kategori" => $kd_kategori,
         ":judul" => $judul,
         ":semester" => $semester,
         ":tahun" => $tahun,
         ":link_dokumen" => $url,
-        ":kd_proposal" => $kd_proposal,
+        ":id" => $id,
     );
     $success = $stmt->execute($params);
     if ($success) {
-        $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE kd_proposal = :kd_proposal AND status_id = 6 AND is_shown = 1";
+        $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE proposal_id = :proposal_id AND status_id = 6 AND is_shown = 1";
         $stmt = $conn->prepare($query);
         // Bind parameters
-        $stmt->bindParam(':kd_proposal', $kd_proposal);
+        $stmt->bindParam(':proposal_id', $id);
         $stmt->execute();
 
         // Prepare and execute the query to insert data to tbl_proses
-        $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :akun_id, 8), (:kd_proposal, :akun_id, 2)";
+        $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 8), (:proposal_id, :akun_id, 2)";
         $stmt = $conn->prepare($query);
         // bind parameter ke query
         $params = array(
-            ":kd_proposal" => $kd_proposal,
+            ":proposal_id" => $id,
             ":akun_id" => $_SESSION['user']['id']
         );
         $stmt->execute($params);

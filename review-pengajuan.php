@@ -32,7 +32,7 @@
             JOIN 
                 tbl_kategori kg 
                 ON
-                    kg.kd_kategori = SUBSTRING_INDEX(kd_proposal, '-', 1)
+                    kg.kd_kategori = ps.kd_kategori
             JOIN 
                 tbl_status sp 
                 ON
@@ -40,15 +40,13 @@
             LEFT JOIN
                 tbl_lpj lpj
                 ON
-                    lpj.kd_proposal = ps.kd_proposal
+                    lpj.proposal_id = ps.id
         WHERE
             ps.kd_proposal = :kd_proposal
     ");
     // bind parameter ke query
-    $params = array(
-        ":kd_proposal" => $kd_proposal
-    );
-    $stmt->execute($params);
+    $stmt->bindParam(':kd_proposal', $kd_proposal);
+    $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -100,159 +98,162 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body pb-4">
-                                    <div class="form-group">
-                                        <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            value="<?php echo $result['kd_proposal'] ?>" 
-                                            disabled
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Judul Proposal</label>
-                                        <input 
-                                            id="judul"
-                                            name="judul"
-                                            class="form-control" 
-                                            type="text" 
-                                            value="<?php echo $result['judul'] ?>" 
-                                            disabled
-                                        />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="judul" class="form-control-label">Tahun Ajar</label>
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <select name="semester" id="semester" class="form-select" disabled>
-                                                    <option value="" disabled>-- Pilih salah satu --</option>
-                                                    <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
-                                                    <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-6">
+                                <div class="card-body pb-5">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="kd_proposal" class="form-control-label">Kode Proposal</label>
                                                 <input 
-                                                    id="tahun"
-                                                    name="tahun"
+                                                    id="judul"
+                                                    name="judul"
                                                     class="form-control" 
                                                     type="text" 
-                                                    value="<?php echo $result['tahun'] ?>" 
+                                                    value="<?php echo $result['kd_proposal'] ?>" 
                                                     disabled
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                    <?php 
-                                        $seperateCode = explode("-", $result['kd_proposal']);
-                                        $kd_kategori = $seperateCode[0];
-                                    ?>
-                                    <?php
-                                            // Perform database connection
-                                            $conn = connect_to_database();
-                                            // jalankan query
-                                            $stmt = $conn->prepare("
-                                                SELECT kd_kategori, nama FROM tbl_kategori WHERE kd_kategori = :kd_kategori");
-                                            $params = array(
-                                                ":kd_kategori" => $kd_kategori
-                                            );
-                                            $stmt->execute($params);
-                                            $item = $stmt->fetch(PDO::FETCH_ASSOC);
-                                        ?>
-                                    <div class="form-group">
-                                        <label for="kategori" class="form-control-label">Kategori</label>
-                                        <select name="kategori" id="kategori" class="form-control" disabled>
-                                            <option value="" disabled>-- Pilih salah satu --</option>
-                                            <option value="<?php echo $item['kd_kategori'] ?>" selected><?php echo $item['nama'] ?></option>
-                                        </select>
-                                    </div>
-                                    <div class="w-100">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group mb-0">
-                                                    <label for="link_dokumen" class="form-control-label">Perlengkapan</label>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="judul" class="form-control-label">Judul Proposal</label>
+                                                <input 
+                                                    id="judul"
+                                                    name="judul"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    value="<?php echo $result['judul'] ?>" 
+                                                    disabled
+                                                />
                                             </div>
                                         </div>
-                                        <div class="row">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="tahun" class="form-control-label">Tahun</label>
+                                                <?php
+                                                    // Perform database connection
+                                                    $conn = connect_to_database();
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare("SELECT * FROM tbl_tahun_ajar ORDER BY tahun DESC");
+                                                    // bind parameter ke query
+                                                    $stmt->execute();
+                                                    $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <select name="tahun" id="tahun" class="form-select" disabled>
+                                                    <option value="" disabled selected>-- Pilih tahun ajaran --</option>
+                                                    <?php foreach ($tahunAjaran as $row) { ?>
+                                                        <option value="<?php echo $row['tahun'] ?>" <?php echo $result['tahun'] == $row['tahun'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="semester" class="form-control-label">Semester</label>
+                                                <select name="semester" id="semester" class="form-select" disabled>
+                                                    <option value="" disabled selected>-- Pilih semester --</option>
+                                                    <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
+                                                    <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="kategori" class="form-control-label">Kategori</label>
+                                                <?php
+                                                    $seperateCode = explode("-", $result['kd_proposal']);
+                                                    $kd_kategori = $seperateCode[0];
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare("SELECT kd_kategori, nama FROM tbl_kategori WHERE kd_kategori = :kd_kategori");
+                                                    // bind parameter ke query
+                                                    $stmt->bindParam(':kd_kategori', $kd_kategori);
+                                                    $stmt->execute();
+                                                    $item = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                ?>
+                                                <select name="kategori" id="kategori" class="form-control" disabled>
+                                                    <option value="" disabled>-- Pilih salah satu --</option>
+                                                    <option value="<?php echo $item['kd_kategori'] ?>" selected><?php echo $item['nama'] ?></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group mb-0">
+                                                <label for="link_dokumen" class="form-control-label">Perlengkapan</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <a href="<?php echo $result['link_dokumen'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
+                                                <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
+                                            </a>
+                                        </div>
+                                        <?php if ($result['link_foto']) { ?>
                                             <div class="col">
-                                                <a href="<?php echo $result['link_dokumen'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
-                                                    <u><i class="fa fa-file-pdf-o me-1"></i>Lihat Dokumen</u>
+                                                <a href="<?php echo $result['link_foto'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
+                                                    <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
                                                 </a>
                                             </div>
-                                            <?php if ($result['link_foto']) { ?>
-                                                <div class="col">
-                                                    <a href="<?php echo $result['link_foto'] ?>" target="_blank" class="btn btn-primary w-100 btn-sm mb-0">
-                                                        <u><i class="fa fa-file-picture-o me-1"></i>Lihat Foto</u>
-                                                    </a>
-                                                </div>
-                                            <?php } ?>
-                                        </div>
+                                        <?php } ?>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label for="link_dokumen" class="form-control-label">Link Proposal</label>
-                                        <input class="form-control" type="link_dokumen" id="link_dokumen" name="link_dokumen" value="<?php echo $result['link_dokumen'] ?>" disabled />
-                                    </div> -->
-                                    <!-- <?php if ($result['link_foto']) { ?> -->
-                                        <!-- <div class="form-group">
-                                            <label for="link_foto" class="form-control-label">Link Foto</label>
-                                            <input class="form-control" type="link_foto" id="link_foto" name="link_foto" value="<?php echo $result['link_foto'] ?>" disabled />
-                                        </div> -->
-                                    <!-- <?php } ?> -->
                                 </div>
-                                <div class="card-footer border pt-1">
+                                <div class="card-footer border">
                                     <?php if ($_SESSION['user']['role'] == "Kaprodi" && $result['status_id'] == 2) { ?>
-                                    <div class="row">
-                                        <div class="col-12 text-center">
-                                            <?php if ($result['link_foto'] == null) { ?>
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#reject-pengajuan">Tolak</button>
-                                            <?php } ?>
-                                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#revisi-pengajuan">Revisi</button>
-                                            <button name="terima" class="btn btn-sm btn-primary">Terima</button>
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <?php if ($result['link_foto'] == null) { ?>
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#reject-pengajuan">Tolak</button>
+                                                <?php } ?>
+                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#revisi-pengajuan">Revisi</button>
+                                                <button name="terima" class="btn btn-sm btn-primary">Terima</button>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php } ?>
                                     <?php 
                                         if (isset($_POST['terima'])) {
                                             $status_proposal = 7;
                                             $status_proses = 3;
                                             // Prepare and execute the query to insert data to tbl_proses
-                                            $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :akun_id, :status_proses)";
+                                            $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 3)";
                                             $stmt = $conn->prepare($query);
                                             // bind parameter ke query
                                             $params = array(
-                                                ":kd_proposal" => $kd_proposal,
-                                                ":akun_id" => $_SESSION['user']['id'],
-                                                ":status_proses" => $status_proses
+                                                ":proposal_id" => $result['id'],
+                                                ":akun_id" => $_SESSION['user']['id']
                                             );
                                             $stmt->execute($params);
                                             if ($conn->lastInsertId() > 0) {
                                                 if ($result['link_foto']) {
                                                     // Prepare and execute the query to insert data to tbl_proses
-                                                    $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :akun_id, 7)";
+                                                    $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :akun_id, 7)";
                                                     $stmt = $conn->prepare($query);
                                                     // bind parameter ke query
                                                     $params = array(
-                                                        ":kd_proposal" => $kd_proposal,
+                                                        ":proposal_id" => $result['id'],
                                                         ":akun_id" => $_SESSION['user']['id']
                                                     );
                                                     $stmt->execute($params);
                                                 }
-                                                $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE kd_proposal = :kd_proposal AND status_id = 2 AND is_shown = 1";
+                                                $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE proposal_id = :proposal_id AND status_id = 2 AND is_shown = 1";
                                                 $stmt = $conn->prepare($query);
                                                 // Bind parameters
-                                                $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                                $stmt->bindParam(':proposal_id', $result['id']);
                                                 $success = $stmt->execute();
                                                 if ($success) {
                                                     // Prepare and execute the query to update data tbl_proposal based on kd_proposal
-                                                    $query = "UPDATE tbl_proposal SET status_id = :status_proposal WHERE kd_proposal = :kd_proposal";
+                                                    $query = "UPDATE tbl_proposal SET status_id = :status_proposal WHERE id = :proposal_id";
                                                     $stmt = $conn->prepare($query);
                                                     // bind parameter ke query
                                                     $params = array(
-                                                        ":status_proposal" => $result['link_foto'] ? $status_proposal : $status_proses,
-                                                        ":kd_proposal" => $kd_proposal);
+                                                        ":status_proposal" => $result['link_foto'] ? 7 : 3,
+                                                        ":proposal_id" => $result['id']);
                                                     $stmt->execute($params);
                                                     $isSubmit = false;
 
@@ -272,7 +273,7 @@
                     </div>
                     <div class="col-md-5 col-sm-12">
                         <div class="card" style="height: 380px">
-                            <div class="card-header border pb-2">
+                            <div class="card-header border pb-3">
                                 <div class="row">
                                     <div class="col"><h6 class="">Status Pengajuan</h6></div>
                                 </div>
@@ -300,66 +301,46 @@
                                                             ON
                                                                 st.id = ps.status_id
                                                     WHERE 
-                                                        ps.kd_proposal = :kd_proposal AND ps.is_shown = 1
+                                                        ps.proposal_id = :proposal_id AND ps.is_shown = 1
                                                     ORDER BY ps.id DESC
                                                 ");
                                                 $i = 1;
                                                 // bind parameter ke query
-                                                $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                                $stmt->bindParam(':proposal_id', $result['id']);
                                                 $stmt->execute();
                                                 $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                                foreach ($hasil as $row) {
                                             ?>
-                                            <div class="row">
-                                                <div class="col pb-3 px-1 <?php echo $i != count($hasil) ? 'border-start' : '' ?> <?php echo $i == 1 ? 'border-success' : 'border-primary-200' ?>">
-                                                    <div class="position-relative">
-                                                        <div class="rounded-circle position-absolute <?php echo $i == 1 ? 'bg-success' : 'bg-primary-200' ?>" style="width: 15px; height: 15px; top: 0px; z-index: 2; left: -12px;"></div>
-                                                    </div>
-                                                    <div class="ps-3 position-relative text-dark">
-                                                        <div class="d-flex justify-content-between">
-                                                            <p class="mb-0 text-bold" style="font-size: 14px; margin-top: -5px;"><?php echo $row['role'] ?></p>
-                                                            <?php
-                                                                $timestamp = strtotime($row['created_at']);
-                                                                $formattedDate = date('d-M-Y H:m', $timestamp);
-                                                            ?>
-                                                            <span class="text-muted my-auto" style="font-size: 11px">
-                                                                <!-- <span class="badge bg-info p-1" style="font-size: 10px"><?php echo $result['link_foto'] == null ? 'Proposal' : 'LPJ' ?></span> -  -->
-                                                                <span style="font-size: 11px"><?php echo $formattedDate ?></span>
-                                                            </span>
+                                            <?php foreach ($hasil as $row) { ?>
+                                                <div class="row">
+                                                    <div class="col pb-3 px-1 <?php echo $i != count($hasil) ? 'border-start' : '' ?> <?php echo $i == 1 ? 'border-success' : 'border-primary-200' ?>">
+                                                        <div class="position-relative">
+                                                            <div class="rounded-circle position-absolute <?php echo $i == 1 ? 'bg-success' : 'bg-primary-200' ?>" style="width: 15px; height: 15px; top: 0px; z-index: 2; left: -12px;"></div>
                                                         </div>
-                                                        <p class="text-muted mb-0" style="font-size: 12px">
-                                                            <span class="text-dark text-bold"><?php echo $row['user'] ?></span> - <i><?php echo $row['status'] ?></i>
-                                                        </p>
-                                                        <?php if ($row['catatan']) { ?>
-                                                            <div class="card card-body mt-1 p-2 border-0 shadow-none" style="border-radius: 7px; background-color: #e2e3e5;">
-                                                                <p class="mb-0 text-dark text-bold" style="font-size: 10px">Komentar: </p>
-                                                                <p class="mb-0 text-dark" style="font-size: 12px"><?php echo $row['catatan'] ?></p>
+                                                        <div class="ps-3 position-relative text-dark">
+                                                            <div class="d-flex justify-content-between">
+                                                                <p class="mb-0 text-bold" style="font-size: 14px; margin-top: -5px;"><?php echo $row['role'] ?></p>
+                                                                <?php
+                                                                    $timestamp = strtotime($row['created_at']);
+                                                                    $formattedDate = date('d-M-Y H:m', $timestamp);
+                                                                ?>
+                                                                <span class="text-muted my-auto" style="font-size: 11px">
+                                                                    <span style="font-size: 11px"><?php echo $formattedDate ?></span>
+                                                                </span>
                                                             </div>
-                                                        <?php } ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <?php $i++ ?>
-                                            <?php } ?>
-                                            <!-- <div class="row">
-                                                <div class="col pb-3">
-                                                    <div class="position-relative">
-                                                        <div class="rounded-circle position-absolute bg-primary-200" style="width: 15px; height: 15px; top: 0px; z-index: 2; left: -19.9px;"></div>
-                                                    </div>
-                                                    <div class="ps-3 position-relative text-dark">
-                                                        <div class="d-flex justify-content-between">
-                                                            <p class="mb-0 text-bold" style="font-size: 14px; margin-top: -2px;">HR</p>
-                                                            <span class="text-muted my-auto" style="font-size: 11px">
-                                                                <span style="font-size: 11px">21 Jul 2023, 18:41</span>
-                                                            </span>
+                                                            <p class="text-muted mb-0" style="font-size: 12px">
+                                                                <span class="text-dark text-bold"><?php echo $row['user'] ?></span> - <i><?php echo $row['status'] ?></i>
+                                                            </p>
+                                                            <?php if ($row['catatan']) { ?>
+                                                                <div class="card card-body mt-1 p-2 border-0 shadow-none" style="border-radius: 7px; background-color: #e2e3e5;">
+                                                                    <p class="mb-0 text-dark text-bold" style="font-size: 10px">Komentar: </p>
+                                                                    <p class="mb-0 text-dark" style="font-size: 12px"><?php echo $row['catatan'] ?></p>
+                                                                </div>
+                                                            <?php } ?>
                                                         </div>
-                                                        <p class="text-muted text-xs mb-0">
-                                                            <span class="text-dark">Arga Nugraha</span> - <i>Pengajuan Selesai</i>
-                                                        </p>
                                                     </div>
                                                 </div>
-                                            </div> -->
+                                                <?php $i++ ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -383,7 +364,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- <div class="h6">Apakah anda yakin ingin menolak pengajuan <span class="badge bg-success"><?php echo $_GET['id'] ?></span> ?</div> -->
                             <div class="form-group">
                                 <label for="catatan" class="form-control-label">Masukkan Alasan</label>
                                 <textarea name="catatan" id="catatan" cols="30" rows="3" class="form-control"></textarea>
@@ -395,29 +375,28 @@
                         </div>
                         <?php 
                             if (isset($_POST['revisi'])) {
-                                $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id, catatan) VALUES (:kd_proposal, :akun_id, 5, :catatan), (:kd_proposal, :akun_id, 6, null)";
+                                $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id, catatan) VALUES (:proposal_id, :akun_id, 5, :catatan), (:proposal_id, :akun_id, 6, null)";
                                 $stmt = $conn->prepare($query);
                                 // bind parameter ke query
                                 $params = array(
-                                    ":kd_proposal" => $kd_proposal,
+                                    ":proposal_id" => $result['id'],
                                     ":akun_id" => $_SESSION['user']['id'],
                                     ":catatan" => $_POST['catatan']
                                 );
                                 $stmt->execute($params);
                                 if ($conn->lastInsertId() > 0) {
-                                    $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE kd_proposal = :kd_proposal AND status_id = 2 AND is_shown = 1";
+                                    $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE proposal_id = :proposal_id AND status_id = 2 AND is_shown = 1";
                                     $stmt = $conn->prepare($query);
                                     // Bind parameters
-                                    $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                    $stmt->bindParam(':proposal_id', $result['id']);
                                     $success = $stmt->execute();
                                     if ($success) {
                                         // Prepare and execute the query to update data tbl_proposal based on kd_proposal
-                                        $query = "UPDATE tbl_proposal SET status_id = 6 WHERE kd_proposal = :kd_proposal";
+                                        $query = "UPDATE tbl_proposal SET status_id = 6 WHERE id = :proposal_id";
                                         $stmt = $conn->prepare($query);
                                         // Bind parameters
-                                        $stmt->bindParam(':kd_proposal', $kd_proposal);
-                                        $stmt->execute();
-    
+                                        $stmt->bindParam(':proposal_id', $result['id']);
+                                        $success = $stmt->execute();
                                         echo "<div class='alert alert-success'>Data berhasil tersimpan</div>";
                                         echo "<meta http-equiv='refresh' content='1;url=approval.php'>";
                                     } else {
@@ -444,10 +423,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- <div class="h6">Apakah anda yakin ingin menolak pengajuan <span class="badge bg-success"><?php echo $_GET['id'] ?></span> ?</div> -->
-                            <div class="form-group">
-                                <label for="catatan" class="form-control-label">Masukkan Alasan</label>
-                                <textarea name="catatan" id="catatan" cols="30" rows="3" class="form-control" required></textarea>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group mb-1">
+                                        <label for="catatan" class="form-control-label">Masukkan Alasan <span class="text-danger">*</span></label>
+                                        <textarea name="catatan" id="catatan" cols="30" rows="3" class="form-control" required></textarea>
+                                    </div>
+                                    <p class="text-xxs text-muted">(<span class="text-danger"><b>*</b></span>) <b>mandatori</b> wajib diisi.</p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -462,27 +445,27 @@
                                     echo "<div class='alert alert-danger'>Data gagal tersimpan</div>";
                                     exit;
                                 }
-                                $query = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id, catatan) VALUES (:kd_proposal, :akun_id, 4, :catatan)";
+                                $query = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id, catatan) VALUES (:proposal_id, :akun_id, 4, :catatan)";
                                 $stmt = $conn->prepare($query);
                                 // bind parameter ke query
                                 $params = array(
-                                    ":kd_proposal" => $kd_proposal,
+                                    ":proposal_id" => $result['id'],
                                     ":akun_id" => $_SESSION['user']['id'],
                                     ":catatan" => $_POST['catatan']
                                 );
                                 $stmt->execute($params);
                                 if ($conn->lastInsertId() > 0) {
-                                    $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE kd_proposal = :kd_proposal AND status_id = 2 AND is_shown = 1";
+                                    $query = "UPDATE tbl_proposal_status SET is_shown = 0 WHERE proposal_id = :proposal_id AND status_id = 2 AND is_shown = 1";
                                     $stmt = $conn->prepare($query);
                                     // Bind parameters
-                                    $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                    $stmt->bindParam(':proposal_id', $result['id']);
                                     $success = $stmt->execute();
                                     if ($success) {
                                         // Prepare and execute the query to update data tbl_proposal based on kd_proposal
-                                        $query = "UPDATE tbl_proposal SET status_id = 4 WHERE kd_proposal = :kd_proposal";
+                                        $query = "UPDATE tbl_proposal SET status_id = 4 WHERE id = :proposal_id";
                                         $stmt = $conn->prepare($query);
                                         // Bind parameters
-                                        $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                        $stmt->bindParam(':proposal_id', $result['id']);
                                         $stmt->execute();
     
                                         echo "<div class='alert alert-success'>Data berhasil tersimpan</div>";

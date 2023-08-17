@@ -17,6 +17,8 @@
     require_once 'helpers/authorize.php';
     require_once 'helpers/functions.php';
     require_once 'config/database.php';
+    // Perform database connection
+    $conn = connect_to_database();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,100 +52,89 @@
             <!-- End Navbar -->
             <div class="container-fluid py-4">
                 <div class="row">
-                    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                        <div class="card">
+                            <div class="card-body p-3">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="numbers">
+                                            <p class="text-sm mb-0 text-uppercase font-weight-bold">User Aktif</p>
+                                            <h5 class="font-weight-bolder mb-0">
+                                                <?php 
+                                                    $query = "SELECT COUNT(*) As JumlahUser FROM tbl_akun WHERE kd_user != :kd_user";
+                                                    // jalankan query
+                                                    $stmt = $conn->prepare($query);
+                                                    // bind parameter ke query
+                                                    $stmt->bindParam(':kd_user', $_SESSION['user']['kd_user']);
+                                                    $stmt->execute();
+                                                    $hasil = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                    echo $hasil['JumlahUser'];
+                                                ?>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                                            <i class="fa fa-user text-lg opacity-10" aria-hidden="true" style="top: 12px"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
                         <div class="card">
                             <div class="card-body p-3">
                             <div class="row">
                                 <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Money</p>
-                                    <h5 class="font-weight-bolder">
-                                    $53,000
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Kategori</p>
+                                    <h5 class="font-weight-bolder mb-0">
+                                        <?php 
+                                            $query = "SELECT COUNT(*) As JumlahKategori FROM tbl_kategori";
+                                            // jalankan query
+                                            $stmt = $conn->prepare($query);
+                                            // bind parameter ke query
+                                            $stmt->execute();
+                                            $hasil = $stmt->fetch(PDO::FETCH_ASSOC);
+                                            echo $hasil['JumlahKategori'];
+                                        ?>
                                     </h5>
-                                    <p class="mb-0">
-                                    <span class="text-success text-sm font-weight-bolder">+55%</span>
-                                    since yesterday
-                                    </p>
                                 </div>
                                 </div>
                                 <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
+                                    <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                                        <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                                    </div>
                                 </div>
                             </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                    <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
                         <div class="card">
                             <div class="card-body p-3">
                             <div class="row">
                                 <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
-                                    <h5 class="font-weight-bolder">
-                                    2,300
-                                    </h5>
-                                    <p class="mb-0">
-                                    <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                    since last week
-                                    </p>
-                                </div>
-                                </div>
-                                <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
-                                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                        <div class="card">
-                            <div class="card-body p-3">
-                            <div class="row">
-                                <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">New Clients</p>
-                                    <h5 class="font-weight-bolder">
-                                    +3,462
-                                    </h5>
-                                    <p class="mb-0">
-                                    <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                                    since last quarter
-                                    </p>
-                                </div>
+                                    <div class="numbers">
+                                        <p class="text-sm mb-0 text-uppercase font-weight-bold">Status Pengajuan</p>
+                                        <h5 class="font-weight-bolder mb-0">
+                                            <?php 
+                                                $query = "SELECT COUNT(*) As JumlahStatus FROM tbl_status";
+                                                // jalankan query
+                                                $stmt = $conn->prepare($query);
+                                                // bind parameter ke query
+                                                $stmt->execute();
+                                                $hasil = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                echo $hasil['JumlahStatus'];
+                                            ?>
+                                        </h5>
+                                    </div>
                                 </div>
                                 <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
-                                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6">
-                        <div class="card">
-                            <div class="card-body p-3">
-                            <div class="row">
-                                <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">IPK</p>
-                                    <h5 class="font-weight-bolder">
-                                    3.20
-                                    </h5>
-                                    <p class="mb-0">
-                                    Meningkat <span class="text-success text-sm font-weight-bolder">+5%</span>
-                                    </p>
-                                </div>
-                                </div>
-                                <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
-                                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
-                                </div>
+                                    <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                                        <i class="ni ni-tag text-lg opacity-10" aria-hidden="true"></i>
+                                    </div>
                                 </div>
                             </div>
                             </div>
@@ -153,68 +144,174 @@
                 <div class="row mt-4">
                     <div class="col-lg-7 mb-lg-0 mb-4">
                         <div class="card z-index-2 h-100">
-                            <div class="card-header pb-0 pt-3 bg-transparent">
-                            <h6 class="text-capitalize">Nilai Akademik</h6>
-                            <p class="text-sm mb-0">
-                                <i class="fa fa-arrow-up text-success"></i>
-                                <span class="font-weight-bold">4% more</span> in 2021
-                            </p>
+                            <div class="card-header pb-0 p-3">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-2">Akun Website</h6>
+                                </div>
                             </div>
-                            <div class="card-body p-3">
-                            <div class="chart">
-                                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table align-items-center ">
+                                        <tbody>
+                                            <?php 
+                                                $query = "SELECT a.*, r.nama rolename FROM tbl_akun a JOIN tbl_role r ON r.id = a.role_id WHERE kd_user != :kd_user";
+                                                // jalankan query
+                                                $stmt = $conn->prepare($query);
+                                                // bind parameter ke query
+                                                $stmt->bindParam(':kd_user', $_SESSION['user']['kd_user']);
+                                                $stmt->execute();
+                                                $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
+                                            <?php
+                                                foreach ($results as $row) {
+                                            ?>
+                                                <tr>
+                                                    <td class="w-20">
+                                                        <div class="d-flex px-2 py-1 align-items-center">
+                                                            <div>
+                                                                <img width="30" src="./assets/img/photo-profile-baru.png" alt="...">
+                                                            </div>
+                                                            <div class="ms-2">
+                                                                <p class="text-xs font-weight-bold mb-0">Nama:</p>
+                                                                <span class="text-xs mb-0"><?php echo $row['nama'] ?></span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="">
+                                                            <p class="text-xs font-weight-bold mb-0">Email:</p>
+                                                            <span class="text-xs mb-0"><?php echo $row['email'] ? $row['email'] : '-' ?></span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="">
+                                                            <p class="text-xs font-weight-bold mb-0">Role:</p>
+                                                            <span class="text-xs mb-0"><?php echo $row['rolename'] ?></span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-sm">
+                                                        <div class="d-flex">
+                                                            <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
+                                                            <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                            <!-- <tr>
+                                                <td class="w-20">
+                                                    <div class="d-flex px-2 py-1 align-items-center">
+                                                        <div>
+                                                            <img width="34" src="./assets/img/photo-profile-baru.png" alt="...">
+                                                        </div>
+                                                        <div class="ms-4">
+                                                            <p class="text-xs font-weight-bold mb-0">Nama:</p>
+                                                            <span class="text-xs mb-0">Mohamad Pais</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="">
+                                                        <p class="text-xs font-weight-bold mb-0">Email:</p>
+                                                        <span class="text-xs mb-0">mohamad.pais30@gmail.com</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="">
+                                                        <p class="text-xs font-weight-bold mb-0">Role:</p>
+                                                        <span class="text-xs mb-0">Mahasiswa</span>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-sm">
+                                                    <div class="d-flex">
+                                                        <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
+                                                        <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w-20">
+                                                    <div class="d-flex px-2 py-1 align-items-center">
+                                                        <div>
+                                                            <img width="34" src="./assets/img/photo-profile-baru.png" alt="...">
+                                                        </div>
+                                                        <div class="ms-4">
+                                                            <p class="text-xs font-weight-bold mb-0">Nama:</p>
+                                                            <span class="text-xs mb-0">Mohamad Pais</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="">
+                                                        <p class="text-xs font-weight-bold mb-0">Email:</p>
+                                                        <span class="text-xs mb-0">mohamad.pais30@gmail.com</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="">
+                                                        <p class="text-xs font-weight-bold mb-0">Role:</p>
+                                                        <span class="text-xs mb-0">Mahasiswa</span>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-sm">
+                                                    <div class="d-flex">
+                                                        <a href="" class="btn btn-link text-warning my-auto px-2"><i class="fa fa-pencil"></i></a>
+                                                        <a href="" class="btn btn-link text-danger my-auto px-2"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <div class="card card-carousel overflow-hidden h-100 p-0">
                             <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
-                            <div class="carousel-inner border-radius-lg h-100">
-                                <div class="carousel-item h-100 active" style="background-image: url('./assets/img/carousel-1.jpg');
-                    background-size: cover;">
-                                <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                    <i class="ni ni-camera-compact text-dark opacity-10"></i>
+                                <div class="carousel-inner border-radius-lg h-100">
+                                    <div 
+                                        class="carousel-item h-100 active" 
+                                        style="background-image: url('./assets/img/carousel-1.jpg'); background-size: cover;">
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                            <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
+                                                <i class="ni ni-camera-compact text-dark opacity-10"></i>
+                                            </div>
+                                            <h5 class="text-white mb-1">Get started with Argon</h5>
+                                            <p>There’s nothing I really wanted to do in life that I wasn’t able to get good at.</p>
+                                        </div>
                                     </div>
-                                    <h5 class="text-white mb-1">Get started with Argon</h5>
-                                    <p>There’s nothing I really wanted to do in life that I wasn’t able to get good at.</p>
-                                </div>
-                                </div>
-                                <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-2.jpg');
-                    background-size: cover;">
-                                <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                    <i class="ni ni-bulb-61 text-dark opacity-10"></i>
+                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-2.jpg'); background-size: cover;">
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                            <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
+                                                <i class="ni ni-bulb-61 text-dark opacity-10"></i>
+                                            </div>
+                                            <h5 class="text-white mb-1">Faster way to create web pages</h5>
+                                            <p>That’s my skill. I’m not really specifically talented at anything except for the ability to learn.</p>
+                                        </div>
                                     </div>
-                                    <h5 class="text-white mb-1">Faster way to create web pages</h5>
-                                    <p>That’s my skill. I’m not really specifically talented at anything except for the ability to learn.</p>
+                                    <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-3.jpg'); background-size: cover;">
+                                        <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
+                                            <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
+                                                <i class="ni ni-trophy text-dark opacity-10"></i>
+                                            </div>
+                                            <h5 class="text-white mb-1">Share with us your design tips!</h5>
+                                            <p>Don’t be afraid to be wrong because you can’t learn anything from a compliment.</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                </div>
-                                <div class="carousel-item h-100" style="background-image: url('./assets/img/carousel-3.jpg');
-                    background-size: cover;">
-                            <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                <i class="ni ni-trophy text-dark opacity-10"></i>
-                                </div>
-                                <h5 class="text-white mb-1">Share with us your design tips!</h5>
-                                <p>Don’t be afraid to be wrong because you can’t learn anything from a compliment.</p>
-                            </div>
+                                <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
                             </div>
                         </div>
-                        <button class="carousel-control-prev w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next w-5 me-3" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                        </div>
-                    </div>
                     </div>
                 </div>
-                <div class="row mt-4">
+                <!-- <div class="row mt-4">
                     <div class="col-lg-7 mb-lg-0 mb-4">
                         <div class="card ">
                             <div class="card-header pb-0 p-3">
@@ -421,7 +518,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <?php include 'includes/footer.php' ?>
             </div>
         </main>

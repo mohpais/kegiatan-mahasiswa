@@ -25,9 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':id', $id);
     $stmt->execute();
     $currentProposal = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo $kd_proposal . '<br />';
     if (isset($currentProposal) && $currentProposal['kd_kategori'] != $kd_kategori) {
-        $kd_proposal = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
+        $kd_proposal = generateCode($kd_kategori, "SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
     }
 
     $update = updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tahun, $url);
@@ -85,16 +84,26 @@ function updateProposal($id, $kd_proposal, $kd_kategori, $judul, $semester, $tah
     return 0;
 }
 
-function generateCode($query) {
+function generateCode($kd_kategori, $query) {
     // Perform database connection
     $conn = connect_to_database();
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $count = count($results) + 1;
-    // Generate the code
-    $code = str_pad($count, 5, '0', STR_PAD_LEFT);
-
+    $count = count($results);
+    $code = "";
+    while (empty($code)) {
+        $count++;
+        // Generate the code
+        $generateCode = $kd_kategori . "-" . str_pad($count, 5, '0', STR_PAD_LEFT);
+        $query = "SELECT COUNT(*) As proposal_count FROM tbl_proposal WHERE kd_proposal=:generate_code";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':generate_code', $generateCode);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && $result['proposal_count'] == 0) $code = $generateCode;
+    }
+    
     return $code;
 }
 ?>

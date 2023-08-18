@@ -36,16 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        if (empty($kd_kategori) && empty($judul) && empty($semester) && empty($tahun) && empty($url)) {
-            $_SESSION['add_proposal_error'] = "Mohon untuk isi salah satu form sebelum menyimpan data!";
+        if (empty($kd_kategori) || empty($tahun) ) {
+            $_SESSION['add_proposal_error'] = "Mohon untuk mengisi kategori dan tahun ajaran sebelum menyimpan data!";
             // Redirect back to the add proposal page
             header('Location: ../proposal-tersimpan.php');
             exit;
         }
-        $code = "";
-        if (!empty($kd_kategori)) {
-            $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
-        }
+        // if (empty($judul) && empty($semester) && empty($url)) {
+        //     $_SESSION['add_proposal_error'] = "Mohon untuk mengisi salah satu form sebelum menyimpan data!";
+        //     // Redirect back to the add proposal page
+        //     header('Location: ../proposal-tersimpan.php');
+        //     exit;
+        // }
+        // $code = "";
+        // if (!empty($kd_kategori)) {
+        //     $code = $kd_kategori . "-" . generateCode("SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
+        // }
+        $code = generateCode($kd_kategori, "SELECT * FROM tbl_proposal WHERE kd_kategori = '" . $kd_kategori . "'");
         $save = updateProposal($code, $kd_kategori, $judul, $semester, $tahun, $url, $user['kd_user'], 'save');
         if ($save > 0) {
             $_SESSION['add_proposal_success'] = "Pengajuan proposal anda berhasil tersimpan!";
@@ -112,16 +119,26 @@ function updateProposal($kd_proposal, $kd_kategori, $judul, $semester, $tahun, $
     return 0;
 }
 
-function generateCode($query) {
+function generateCode($kd_kategori, $query) {
     // Perform database connection
     $conn = connect_to_database();
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $count = count($results) + 1;
-    // Generate the code
-    $code = str_pad($count, 5, '0', STR_PAD_LEFT);
-
+    $count = count($results);
+    $code = "";
+    while (empty($code)) {
+        $count++;
+        // Generate the code
+        $generateCode = $kd_kategori . "-" . str_pad($count, 5, '0', STR_PAD_LEFT);
+        $query = "SELECT COUNT(*) As proposal_count FROM tbl_proposal WHERE kd_proposal=:generate_code";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':generate_code', $generateCode);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && $result['proposal_count'] == 0) $code = $generateCode;
+    }
+    
     return $code;
 }
 ?>

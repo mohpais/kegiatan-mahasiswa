@@ -192,7 +192,7 @@
                                 <div class="card-footer border">
                                     <div class="row">
                                         <div class="col-auto mx-auto">
-                                            <button type="submit" name="save" class="btn btn-sm btn-default">Save</button>
+                                            <button type="submit" name="save" class="btn btn-sm btn-default">Simpan</button>
                                             <button type="submit" name="submit" class="btn btn-sm btn-primary">Submit</button>
                                         </div>
                                     </div>

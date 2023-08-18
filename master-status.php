@@ -126,10 +126,10 @@
                                                         <span class="btn-inner--icon me-1"><i class="fa fa-pencil"></i></span>
                                                         <span class="btn-inner--text">Edit</span>
                                                     </a>
-                                                    <a href="hapus-status.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
+                                                    <!-- <a href="hapus-status.php?id=<?php echo $row['id'] ?>" class="btn btn-icon px-3 btn-sm btn-danger my-auto" type="button">
                                                         <span class="btn-inner--icon me-1"><i class="fa fa-trash"></i></span>
                                                         <span class="btn-inner--text">Hapus</span>
-                                                    </a>
+                                                    </a> -->
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>

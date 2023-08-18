@@ -4627,8 +4627,12 @@ fieldset:disabled .btn {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-  color: var(--bs-nav-pills-link-active-color);
-  background-color: var(--bs-nav-pills-link-active-bg);
+  /* color: var(--bs-nav-pills-link-active-color); */
+  /* background-color: var(--bs-nav-pills-link-active-bg); */
+  color: #fff !important;
+  font-weight: 600;
+  /* border-radius: 0 !important; */
+  background-color: var(--bs-ubk) !important;
 }
 
 .nav-fill>.nav-link,
@@ -23758,7 +23762,8 @@ hr.horizontal.gray-light {
 .nav.nav-pills .nav-link {
   z-index: 3;
   color: #344767;
-  border-radius: 0.5rem;
+  /* border-radius: 0.5rem; */
+  border-radius: 0;
   background-color: inherit;
 }
 

@@ -41,7 +41,7 @@
             LEFT JOIN
                 tbl_lpj lpj
                 ON
-                    lpj.kd_proposal = ps.kd_proposal
+                    lpj.proposal_id = ps.id
         WHERE
             ps.kd_proposal = :kd_proposal
     ");
@@ -155,10 +155,10 @@
                                                     $stmt->execute();
                                                     $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
-                                                <select name="tahun" id="tahun" class="form-select" required>
+                                                <select name="tahun" id="tahun" class="form-select" disabled>
                                                     <option value="" disabled selected>-- Pilih tahun ajaran --</option>
                                                     <?php foreach ($tahunAjaran as $row) { ?>
-                                                        <option value="<?php echo $row['tahun'] ?>" <?php echo $result['tahun'] == $row['tahun'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
+                                                        <option value="<?php echo $row['id'] ?>" <?php echo $result['tahun_ajar_id'] == $row['id'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -166,7 +166,7 @@
                                         <div class="col">
                                             <div class="form-group">
                                                 <label for="semester" class="form-control-label">Semester</label>
-                                                <select name="semester" id="semester" class="form-select" required>
+                                                <select name="semester" id="semester" class="form-select" disabled>
                                                     <option value="" disabled selected>-- Pilih semester --</option>
                                                     <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
                                                     <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
@@ -236,28 +236,28 @@
                                                         exit;
                                                     }
                                                     // Prepare and execute the query to insert data to tbl_lpj
-                                                    $queryUpdateLPJ = "UPDATE tbl_lpj SET link_foto = :link_foto WHERE kd_proposal=:kd_proposal";
+                                                    $queryUpdateLPJ = "UPDATE tbl_lpj SET link_foto = :link_foto WHERE proposal_id=:proposal_id";
                                                     $update = $conn->prepare($queryUpdateLPJ);
                                                     // bind parameter ke query
                                                     $params = array(
                                                         ":link_foto" => $_POST['link_foto'],
-                                                        ":kd_proposal" => $_POST['kd_proposal']
+                                                        ":proposal_id" => $result['id']
                                                     );
                                                     $success = $update->execute($params);
                                                     if ($success) {
                                                         // Prepare and execute the query to insert data to tbl_proses
-                                                        $queryInsertProses = "INSERT INTO tbl_proposal_status (kd_proposal, akun_id, status_id) VALUES (:kd_proposal, :kd_user, 9), (:kd_proposal, :kd_user, 2)";
+                                                        $queryInsertProses = "INSERT INTO tbl_proposal_status (proposal_id, akun_id, status_id) VALUES (:proposal_id, :kd_user, 9), (:proposal_id, :kd_user, 2)";
                                                         $insert = $conn->prepare($queryInsertProses);
                                                         // bind parameter ke query
                                                         $params = array(
-                                                            ":kd_proposal" => $kd_proposal,
+                                                            ":proposal_id" => $result['id'],
                                                             ":kd_user" => $_SESSION['user']['id']
                                                         );
                                                         $insert->execute($params);
                                                         if ($conn->lastInsertId() > 0) {
-                                                            $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE kd_proposal = :kd_proposal";
+                                                            $queryUpdate = "UPDATE tbl_proposal SET status_id = 2 WHERE id = :proposal_id";
                                                             $update = $conn->prepare($queryUpdate);
-                                                            $update->bindParam(':kd_proposal', $kd_proposal);
+                                                            $update->bindParam(':proposal_id', $result['id']);
 
                                                             $success = $update->execute();
                                                             if ($success) {
@@ -313,12 +313,12 @@
                                                             ON
                                                                 st.id = ps.status_id
                                                     WHERE 
-                                                        ps.kd_proposal = :kd_proposal AND ps.is_shown = 1
+                                                        ps.proposal_id = :proposal_id AND ps.is_shown = 1
                                                     ORDER BY ps.id DESC
                                                 ");
                                                 $i = 1;
                                                 // bind parameter ke query
-                                                $stmt->bindParam(':kd_proposal', $kd_proposal);
+                                                $stmt->bindParam(':proposal_id', $result['id']);
                                                 $stmt->execute();
                                                 $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

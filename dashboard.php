@@ -296,10 +296,22 @@
                                                                             </a>
                                                                         <?php } ?>
                                                                         <?php if (($row['lpj_id'] == null && $row['status_id'] != 3 && $row['status_id'] != 6 && $row['status_id'] != 11) || $row['status_id'] == 2 || $row['status_id'] == 7 ) { ?>
-                                                                            <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                                            <!-- <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
                                                                                 <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
-                                                                                <!-- <span class="btn-inner--text">Lihat Pengajuan</span> -->
-                                                                            </a>
+                                                                                <span class="btn-inner--text">Lihat Pengajuan</span>
+                                                                            </a> -->
+                                                                            <form method="post">
+                                                                                <button type="submit" name="move" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                                    <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
+                                                                                </button>
+                                                                                <?php
+                                                                                    $kd_p = $row['kd_proposal'];
+                                                                                    if (isset($_POST['move'])) {
+                                                                                        $_SESSION['page_before'] = get_current_url();
+                                                                                        echo "<meta http-equiv='refresh' content='1;url=review-pengajuan.php?id=" . $kd_p . "'>";
+                                                                                    }
+                                                                                ?>
+                                                                            </form>
                                                                         <?php } ?>
                                                                         <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
                                                                             <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
@@ -457,10 +469,22 @@
                                                                             </a>
                                                                         <?php } ?>
                                                                         <?php if (($row['lpj_id'] == null && $row['status_id'] != 3 && $row['status_id'] != 6 && $row['status_id'] != 11) || $row['status_id'] == 2 || $row['status_id'] == 7 ) { ?>
-                                                                            <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                                            <!-- <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
                                                                                 <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
-                                                                                <!-- <span class="btn-inner--text">Lihat Pengajuan</span> -->
-                                                                            </a>
+                                                                                <span class="btn-inner--text">Lihat Pengajuan</span>
+                                                                            </a> -->
+                                                                            <form method="post">
+                                                                                <button type="submit" name="move" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                                    <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
+                                                                                </button>
+                                                                                <?php
+                                                                                    $kd_p = $row['kd_proposal'];
+                                                                                    if (isset($_POST['move'])) {
+                                                                                        $_SESSION['page_before'] = get_current_url();
+                                                                                        echo "<meta http-equiv='refresh' content='1;url=review-pengajuan.php?id=" . $kd_p . "'>";
+                                                                                    }
+                                                                                ?>
+                                                                            </form>
                                                                         <?php } ?>
                                                                         <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
                                                                             <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">
@@ -618,10 +642,22 @@
                                                                             </a>
                                                                         <?php } ?>
                                                                         <?php if (($row['lpj_id'] == null && $row['status_id'] != 3 && $row['status_id'] != 6 && $row['status_id'] != 11) || $row['status_id'] == 2 || $row['status_id'] == 7 ) { ?>
-                                                                            <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                                            <!-- <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
                                                                                 <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
-                                                                                <!-- <span class="btn-inner--text">Lihat Pengajuan</span> -->
-                                                                            </a>
+                                                                                <span class="btn-inner--text">Lihat Pengajuan</span>
+                                                                            </a> -->
+                                                                            <form method="post">
+                                                                                <button type="submit" name="move" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                                    <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
+                                                                                </button>
+                                                                                <?php
+                                                                                    $kd_p = $row['kd_proposal'];
+                                                                                    if (isset($_POST['move'])) {
+                                                                                        $_SESSION['page_before'] = get_current_url();
+                                                                                        echo "<meta http-equiv='refresh' content='1;url=review-pengajuan.php?id=" . $kd_p . "'>";
+                                                                                    }
+                                                                                ?>
+                                                                            </form>
                                                                         <?php } ?>
                                                                         <?php if ($row['status_id'] == 6 && $row['lpj_id'] == null) { ?>
                                                                             <a href="edit-proposal.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-warning my-auto" type="button">

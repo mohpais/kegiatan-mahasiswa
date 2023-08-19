@@ -13,12 +13,14 @@
             }
             $page = $newUrl;
         }
-
-        return $page;
+        
+        return trim($page);
     }
 
     function active_navbar($fileName) {
-        if (get_current_url()) {
-            # code...
+        print_r($fileName);
+        if (isset($_SESSION['page_before']) && get_current_url() == "review-kategori") {
+            return in_array($_SESSION['page_before'], $fileName) ? 'active' : '';
         }
+        return in_array(get_current_url(), $fileName) ? 'active' : '';
     }

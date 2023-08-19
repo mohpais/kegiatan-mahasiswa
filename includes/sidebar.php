@@ -11,7 +11,7 @@
         <ul class="navbar-nav">
             <?php if ($_SESSION['user']['role'] == "Mahasiswa") { ?>
                 <li class="nav-item">
-                    <a class="nav-link px-2 <?php echo get_current_url() == 'dashboard' ? 'active' : '' ?>" href="dashboard.php">
+                    <a class="nav-link px-2 <?php echo active_navbar(array('dashboard', 'tambah proposal', 'review pengajuan', 'tambah lpj', 'proposal tersimpan')); ?>" href="dashboard.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-tv-2 text-warning text-sm opacity-10"></i>
                         </div>
@@ -29,7 +29,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link px-2 <?php echo get_current_url() == 'approval' ? 'active' : '' ?>" href="approval.php">
+                <a class="nav-link px-2 <?php echo active_navbar(array('approval', 'review pengajuan')); ?>" href="approval.php">
                     <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="ni ni-notification-70 text-warning text-sm opacity-10"></i>
                     </div>
@@ -50,7 +50,7 @@
                     <h6 class="ps-3 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2 <?php echo get_current_url() == 'master kategori' ? 'active' : '' ?>" href="master-kategori.php">
+                    <a class="nav-link px-2 <?php echo active_navbar(array('master kategori', 'tambah kategori', 'edit kategori', 'hapus kategori')); ?>" href="master-kategori.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-support-16 text-warning text-sm opacity-10"></i>
                         </div>
@@ -58,13 +58,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-2 <?php echo get_current_url() == 'master status' ? 'active' : '' ?>" href="master-status.php">
+                    <a class="nav-link px-2 <?php echo active_navbar(array('master status', 'tambah status', 'edit status', 'hapus status')); ?>" href="master-status.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-support-16 text-warning text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Status</span>
                     </a>
-                    <a class="nav-link px-2 <?php echo get_current_url() == 'master tahun ajaran' ? 'active' : '' ?>" href="master-tahun-ajaran.php">
+                    <a class="nav-link px-2 <?php echo active_navbar(array('master tahun ajaran', 'tambah tahun ajaran', 'edit tahun ajaran', 'hapus tahun ajaran')); ?>" href="master-tahun-ajaran.php">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-support-16 text-warning text-sm opacity-10"></i>
                         </div>

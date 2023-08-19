@@ -324,9 +324,21 @@
                                                             </span>
                                                         </td>
                                                         <td class="align-middle text-center">
-                                                            <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
+                                                            <!-- <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-info my-auto" type="button">
                                                                 <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
-                                                            </a>
+                                                            </a> -->
+                                                            <form method="post">
+                                                                <button type="submit" name="move" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                                    <span class="btn-inner--icon"><i class="fa fa-eye"></i></span>
+                                                                </button>
+                                                                <?php
+                                                                    $kd_p = $row['kd_proposal'];
+                                                                    if (isset($_POST['move'])) {
+                                                                        $_SESSION['page_before'] = get_current_url();
+                                                                        echo "<meta http-equiv='refresh' content='1;url=review-pengajuan.php?id=" . $kd_p . "'>";
+                                                                    }
+                                                                ?>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                 <?php } ?>

@@ -87,10 +87,17 @@
                                 <div class="card-header border pb-3">
                                     <div class="row">
                                         <div class="col-auto pe-0 my-auto">
-                                            <?php if ($_SESSION['user']['role'] == "Kaprodi") { ?>
-                                                <a href="approval.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
-                                            <?php } else { ?>
-                                                <a href="dashboard.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
+                                            <?php
+                                                // if ($_SESSION['user']['role'] == "Kaprodi")
+                                                if (isset($_SESSION['page_before'])) {
+                                            ?>
+                                                <?php if ($_SESSION['page_before'] == 'approval') { ?>
+                                                    <a href="approval.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
+                                                <?php } else if ($_SESSION['page_before'] == 'dashboard') { ?>
+                                                    <a href="dashboard.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
+                                                <?php } else if ($_SESSION['page_before'] == 'laporan') { ?>
+                                                    <a href="laporan.php" class="btn btn-sm border my-auto btn-default me-2 px-3"><i class="fa fa-arrow-left"></i></a>
+                                                <?php } ?>
                                             <?php } ?>
                                         </div>
                                         <div class="col-10 ps-1 my-auto">

@@ -21,7 +21,7 @@
     // Perform database connection
     $conn = connect_to_database();
     // jalankan query
-    $stmt = $conn->prepare("SELECT * FROM tbl_kategori WHERE id = :id");
+    $stmt = $conn->prepare("SELECT * FROM tbl_kategori WHERE kd_kategori = :id");
     // bind parameter ke query
     $stmt->bindParam(':id', $id);
     $stmt->execute();

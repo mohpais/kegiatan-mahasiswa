@@ -169,10 +169,23 @@
                                                     <span class="badge badge-sm bg-gradient-success"><?php echo $row['status'] ?></span>
                                                 </td>
                                                 <td class="align-middle ">
-                                                    <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                    <!-- <a href="review-pengajuan.php?id=<?php echo $row['kd_proposal'] ?>" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
                                                         <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
                                                         <span class="btn-inner--text">Lihat</span>
-                                                    </a>
+                                                    </a> -->
+                                                    <form method="post">
+                                                        <button type="submit" name="move" class="btn btn-icon px-3 btn-sm btn-primary my-auto" type="button">
+                                                            <span class="btn-inner--icon me-1"><i class="fa fa-eye"></i></span>
+                                                            <span class="btn-inner--text">Lihat</span>
+                                                        </button>
+                                                        <?php
+                                                            $kd_p = $row['kd_proposal'];
+                                                            if (isset($_POST['move'])) {
+                                                                $_SESSION['page_before'] = get_current_url();
+                                                                echo "<meta http-equiv='refresh' content='1;url=review-pengajuan.php?id=" . $kd_p . "'>";
+                                                            }
+                                                        ?>
+                                                    </form>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>

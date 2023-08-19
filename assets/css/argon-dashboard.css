@@ -23747,8 +23747,10 @@ hr.horizontal.gray-light {
 
 .nav.nav-pills {
   background: #f8f9fa;
-  border-radius: 0.75rem;
+  /* border-radius: 0.75rem; */
   position: relative;
+  border-left: 2px solid #fff !important;
+  border-right: 2px solid #fff !important;
 }
 
 .nav.nav-pills.nav-pills-vertical {

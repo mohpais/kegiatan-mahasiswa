@@ -36,12 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        if (empty($kd_kategori) || empty($tahun) ) {
-            $_SESSION['add_proposal_error'] = "Mohon untuk mengisi kategori dan tahun ajaran sebelum menyimpan data!";
+        if (empty($kd_kategori) || empty($judul) || empty($semester) || empty($tahun) || empty($url)) {
+            $_SESSION['add_proposal_error'] = "Mohon untuk lengkapi data form sebelum menyimpan data!";
             // Redirect back to the add proposal page
             header('Location: ../proposal-tersimpan.php');
             exit;
         }
+        // if (empty($kd_kategori) || empty($tahun) ) {
+        //     $_SESSION['add_proposal_error'] = "Mohon untuk mengisi kategori dan tahun ajaran sebelum menyimpan data!";
+        //     // Redirect back to the add proposal page
+        //     header('Location: ../proposal-tersimpan.php');
+        //     exit;
+        // }
         // if (empty($judul) && empty($semester) && empty($url)) {
         //     $_SESSION['add_proposal_error'] = "Mohon untuk mengisi salah satu form sebelum menyimpan data!";
         //     // Redirect back to the add proposal page

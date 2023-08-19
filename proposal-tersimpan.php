@@ -114,7 +114,7 @@
                                                     type="text" 
                                                     placeholder="Masukkan judul proposal" 
                                                     value="<?php echo $result['judul'] ?>"
-                                                   
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -132,7 +132,7 @@
                                                     $stmt->execute();
                                                     $tahunAjaran = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
-                                                <select name="tahun" id="tahun" class="form-select">
+                                                <select name="tahun" id="tahun" class="form-select" required>
                                                     <option value="" disabled selected>-- Pilih tahun ajaran --</option>
                                                     <?php foreach ($tahunAjaran as $row) { ?>
                                                         <option value="<?php echo $row['id'] ?>" <?php echo $result['tahun_ajar_id'] == $row['id'] ? 'selected' : '' ?>><?php echo $row['tahun'] ?></option>
@@ -143,7 +143,7 @@
                                         <div class="col">
                                             <div class="form-group">
                                                 <label for="semester" class="form-control-label">Semester <span class="text-danger">*</span></label>
-                                                <select name="semester" id="semester" class="form-select">
+                                                <select name="semester" id="semester" class="form-select" required>
                                                     <option value="" disabled selected>-- Pilih semester --</option>
                                                     <option value="ganjil" <?php echo $result['semester'] == 'ganjil' ? 'selected' : '' ?>>Ganjil</option>
                                                     <option value="genap" <?php echo $result['semester'] == 'genap' ? 'selected' : '' ?>>Genap</option>
@@ -164,7 +164,7 @@
                                                     $stmt->execute();
                                                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 ?>
-                                                <select name="kd_kategori" id="kd_kategori" class="form-control">
+                                                <select name="kd_kategori" id="kd_kategori" class="form-control" required>
                                                     <option value="" disabled selected>-- Pilih salah satu --</option>
                                                     <?php 
                                                         foreach ($results as $item) {
@@ -179,7 +179,7 @@
                                         <div class="col">
                                             <div class="form-group">
                                                 <label for="url" class="form-control-label">Link Proposal <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="url" id="url" name="url" value="<?php echo $result['link_dokumen'] ?>" />
+                                                <input class="form-control" type="url" id="url" name="url" value="<?php echo $result['link_dokumen'] ?>" required />
                                             </div>
                                         </div>
                                     </div>
